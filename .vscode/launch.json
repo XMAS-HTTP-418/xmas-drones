@@ -13,10 +13,10 @@
             "justMyCode": true
         },
         {
-            "name": "Python: visualizer",
+            "name": "Python: image_service",
             "type": "python",
             "request": "launch",
-            "program": "app/visualizer.py",
+            "program": "app/image_service.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
