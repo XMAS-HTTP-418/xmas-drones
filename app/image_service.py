@@ -10,8 +10,8 @@ class Point(NamedTuple):
     x: int
     y: int
     
-    def __str__(self) -> str:
-        return f'{self.x} {self.y}'
+    def __repr__(self) -> str:
+        return f'({self.x},{self.y})'
 
 class ImageService:
 
@@ -20,7 +20,7 @@ class ImageService:
         self.mission_targets = cv2.imread(MISSION_TARGETS_IMAGE)
         self.targets_coords = []
 
-    def get_targets_coords(self):
+    def get_targets_coords(self) -> list[Point]:
         """
         Получаем координаты цели
         """
