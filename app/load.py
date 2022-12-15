@@ -2,7 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
 
-class MissionType(Enum):
+class LoadType(Enum):
     SPRAYING_SYSTEM: str = 'SPRAYING_SYSTEM'
     LIDAR: str = 'LIDAR'
     HD_CAMERA: str = 'HD_CAMERA'
@@ -11,9 +11,10 @@ class MissionType(Enum):
     GEORADAR: str = 'GEORADAR'
 
 @dataclass
-class Mission:
+class Load:
     id: int
-    type: MissionType
-    priority: int
-    periodic: float
-    progress: Optional[float]
+    type: LoadType
+    power: Optional[float]
+    mass: float
+    used: Optional[float]
+    rate: Optional[float]
