@@ -1,0 +1,123 @@
+{
+  "drones": [
+    {
+      "id": 1,
+      "position": [
+        0, 0, 0
+      ],
+      "velocity": [
+        0, 0, 0
+      ],
+      "mass": 1.5,
+      "max_load": 15,
+      "battery": 30.0,
+      "max_battery": 60.0,
+      "is_master": false,
+      "load_id": null,
+      "task_id": null
+    },
+    {
+      "id": 2,
+      "position": [
+        0, 1, 0
+      ],
+      "velocity": [
+        0, 0, 0
+      ],
+      "mass": 1.5,
+      "max_load": 10,
+      "battery": 30.0,
+      "max_battery": 60.0,
+      "is_master": false,
+      "load_id": null,
+      "task_id": null
+    },
+    {
+      "id": 3,
+      "position": [
+        1, 0, 0
+      ],
+      "velocity": [
+        0, 0, 0
+      ],
+      "mass": 1.5,
+      "max_load_mass": 5,
+      "battery": 30.0,
+      "max_battery": 60.0,
+      "is_master": false,
+      "load_id": null,
+      "task_id": null
+    }
+  ],
+  "missions": [
+    {
+      "id": 1,
+      "type": "spraying system",
+      "priority": 1,
+      "periodic": null,
+      "progress": 0.0
+    },
+    {
+      "id": 2,
+      "type": "cargo",
+      "priority": 2,
+      "periodic": null
+    },
+    {
+      "id": 3,
+      "type": "georadar",
+      "priority": 2,
+      "periodic": null
+    },
+    {
+      "id": 4,
+      "type": "HD camera",
+      "priority": 3,
+      "periodic": null
+    },
+    {
+      "id": 5,
+      "type": "video camera",
+      "priority": 3,
+      "periodic": null
+    }
+  ],
+  "loads": [
+    {
+      "id": 1,
+      "type": "spraying system",
+      "power": 50,
+      "mass": 2,
+      "used": 0.5,
+      "rate": 1
+    },
+    {
+      "id": 2,
+      "type": "lidar",
+      "power": 20,
+      "mass": 2
+    },
+    {
+      "id": 3,
+      "type": "HD camera",
+      "mass": 1
+    },
+    {
+      "id": 4,
+      "type": "video camera",
+      "power": 10,
+      "mass": 1.5
+    },
+    {
+      "id": 5,
+      "type": "cargo",
+      "mass": 3
+    },
+    {
+      "id": 6,
+      "type": "georadar",
+      "mass": 5,
+      "power": 10
+    }
+  ]
+}
