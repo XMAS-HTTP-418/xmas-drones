@@ -1,6 +1,7 @@
 from heapq import heappop, heappush
 from PIL import Image
 import numpy as np
+from typing import List
 
 
 def getArrayHeightMap() -> np.ndarray:
@@ -57,9 +58,27 @@ class Dijkstra:
             using[cur.row][cur.cow] = 1
             self.distances[cur.row][cur.cow] = cur.cost
             for krow, kcow in self.kRowCow:
-                i, j = n = self.validate(cur.row + krow, cur.cow + kcow)
+                i, j = self.validate(cur.row + krow, cur.cow + kcow)
                 if not using[i][j]:
                     h = np.sqrt(
                         np.square(np.subtract(int(self.heightMap[i][j]), self.heightMap[cur.row][
                             cur.cow])) + 1)
                     heappush(OPEN, Node(i, j, cur.cost + h))
+
+    def getNearestMinimumCoordinates(self, cur: tuple) -> tuple:
+        mn = self.distances[cur]
+        ans = cur
+        for krow, kcow in self.kRowCow:
+            nx = self.validate(cur[0] + krow, cur[1] + kcow)
+            if self.distances[nx] < mn:
+                mn = self.distances[nx]
+                ans = nx
+        return ans
+
+    def getRoute(self, cur: tuple) -> List[tuple]:
+        route = [cur]
+        while cur != self.start:
+            cur = self.getNearestMinimumCoordinates(cur)
+            route.append(cur)
+        route.reverse()
+        return route
