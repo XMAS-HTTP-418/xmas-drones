@@ -49,9 +49,7 @@ class Dijkstra:
     def run(self):
         using = np.array(tuple(np.zeros(self.size[0], dtype="uint8") for _ in range(self.size[1])))
         OPEN = list()
-        dct = dict()
         heappush(OPEN, Node(self.start[0], self.start[1], int(self.heightMap[self.start])))
-        # mx = self.size[0]*self.size[1]
         while OPEN:
             cur: Node = heappop(OPEN)
             if using[cur.row][cur.cow]:
@@ -65,5 +63,3 @@ class Dijkstra:
                         np.square(np.subtract(int(self.heightMap[i][j]), self.heightMap[cur.row][
                             cur.cow])) + 1)
                     heappush(OPEN, Node(i, j, cur.cost + h))
-                    lst = dct.get(n, [])
-                    heappush(lst, Node(i, j, cur.cost + h))
