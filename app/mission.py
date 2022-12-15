@@ -1,5 +1,6 @@
 from typing import Optional
 from dataclasses import dataclass
+import numpy as np
 from enum import Enum
 
 class MissionType(Enum):
@@ -17,3 +18,6 @@ class Mission:
     priority: int
     periodic: float
     progress: Optional[float]
+
+    def get_closest_position(self) -> np.array:
+        pass
