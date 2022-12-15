@@ -1,22 +1,24 @@
-from array import array
+import numpy as np
 import matplotlib.pyplot as plt
 
-from height_map import get_mission_area, get_color_value
+from image_service import ImageService
+
+imageservice = ImageService()
 
 fig = plt.figure(figsize=(12, 12))
 ax = fig.add_subplot(projection='3d')
 
-image = get_mission_area()
+image = imageservice.mission_area
 
-x_values = array('i')
-y_values = array('i')
-z_values = array('i')
+x_values = np.array([])
+y_values = np.array([])
+z_values = np.array([])
 
 for i, row in enumerate(image):
     for j, color_list in enumerate(row):
-        x_values.append(i)
-        y_values.append(j)
-        z_values.append(get_color_value(color_list))
+        x_values = np.append(x_values, i)
+        y_values = np.append(y_values, j)
+        z_values = np.append(z_values, imageservice.get_color_value(color_list))
 
 
 ax.scatter(x_values, y_values, z_values, c=z_values, zdir='z', cmap='Accent')

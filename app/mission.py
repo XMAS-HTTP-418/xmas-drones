@@ -3,13 +3,13 @@ from dataclasses import dataclass
 import numpy as np
 from enum import Enum
 
-class MissionType(Enum):
-    SPRAYING_SYSTEM: str = 'SPRAYING_SYSTEM'
-    LIDAR: str = 'LIDAR'
-    HD_CAMERA: str = 'HD_CAMERA'
-    VIDEO_CAMERA: str = 'VIDEO_CAMERA'
-    CARGO: str = 'CARGO'
-    GEORADAR: str = 'GEORADAR'
+class MissionType(Enum, str):
+    SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
+    LIDAR = 'LIDAR'
+    HD_CAMERA = 'HD_CAMERA'
+    VIDEO_CAMERA = 'VIDEO_CAMERA'
+    CARGO = 'CARGO'
+    GEORADAR = 'GEORADAR'
 
 @dataclass
 class Mission:
