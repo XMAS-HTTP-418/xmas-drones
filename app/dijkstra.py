@@ -82,3 +82,6 @@ class Dijkstra:
             route.append(cur)
         route.reverse()
         return route
+
+    def getDistances(self, cur: tuple) -> int:
+        return self.distances[cur]
