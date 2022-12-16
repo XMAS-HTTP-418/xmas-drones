@@ -4,7 +4,6 @@ from typing import NamedTuple
 from config import POINT_LIST
 
 
-
 class BT(NamedTuple):
     """
     A Binary Tree (BT) with a node value, and left- and

@@ -67,9 +67,9 @@ class Server(Thread):
             client.disconnect()
         Logger.command("Server has stopped")
 
+
 class Master(DroneController, Server):
     pass
-
 
 
 if __name__ == '__main__':

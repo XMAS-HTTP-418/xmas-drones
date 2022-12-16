@@ -5,6 +5,7 @@ import numpy as np
 from drone import Drone
 from enum import Enum
 
+
 class TaskType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
@@ -12,6 +13,7 @@ class TaskType(str, Enum):
     VIDEO_CAMERA = 'VIDEO_CAMERA'
     CARGO = 'CARGO'
     GEORADAR = 'GEORADAR'
+
 
 @dataclass
 class Task:

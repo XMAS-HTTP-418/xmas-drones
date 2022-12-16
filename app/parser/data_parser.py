@@ -1,9 +1,8 @@
 import json
 import numpy as np
-from task import Task, TaskType
-from drone import Drone
-from load import Load, LoadType
-from station import Station, StationType
+from app.tasks.task import Task, TaskType
+from drones.drone import Drone
+from models import Load, LoadType, Station, StationType
 
 
 class DataParser:
@@ -11,13 +10,13 @@ class DataParser:
     loads: list[Load]
     missions: list[Task]
     stations: list[Station]
+
     def __init__(self):
-        from drone import Drone
+        from app.drones.drone import Drone
+
         self.drone_module = Drone
 
-        
-  
-    def __parse_drone(self,raw: dict) :
+    def __parse_drone(self, raw: dict):
         raw.setdefault(None)
         return self.drone_module(
             id=raw['id'],
@@ -61,13 +60,8 @@ class DataParser:
         return Station(id=raw['id'], position=np.array(raw['position']), type=StationType.RECHARGE)
 
     @classmethod
-    def load_data(cls, data:dict) -> None:
+    def load_data(cls, data: dict) -> None:
         cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
         cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
-
-<<<<<<< HEAD
-=======
-
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3

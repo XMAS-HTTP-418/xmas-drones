@@ -16,4 +16,3 @@ def get_cost_matrix(drones: List[Drone], missions: List[Task]) -> np.array:
         for j, mission in enumerate(missions):
             cost_matrix[i][j] = drone.evaluate_mission_cost(mission)
     return cost_matrix
-

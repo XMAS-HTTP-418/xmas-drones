@@ -10,6 +10,7 @@ class SlaveInfo:
         self.port = rawAddress[1]
         self.fullAddress = f"{self.ipAddress}:{self.port}"
 
+
 class Request:
     def __init__(self, controller, action, body=None):
         self.controller = controller
@@ -17,7 +18,7 @@ class Request:
         self.body = body
 
     @staticmethod
-    def fromJson(requestJson):
+    def from_Json(requestJson):
         jsonRequest = JSONDecoder().decode(requestJson)
         controller = jsonRequest["controller"]
         action = jsonRequest["action"]
@@ -46,13 +47,13 @@ class Response:
             "succeed": self.succeed,
             "errorMessage": self.errorMessage,
             "changes": self.changes,
-            "body": self.body
+            "body": self.body,
         }
         responseJson = JSONEncoder().encode(responseDict)
         return responseJson
 
     @staticmethod
-    def fromJson(responseJson):
+    def from_json(responseJson):
         jsonResponse = JSONDecoder().decode(responseJson)
         body = jsonResponse["body"]
         errorMessage = jsonResponse["errorMessage"]

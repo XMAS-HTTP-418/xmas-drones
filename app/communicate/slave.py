@@ -57,7 +57,7 @@ class SlaveMaster(Thread):
 
     def handleResponse(self, responseData: str):
         try:
-            response = Response.fromJson(responseData)
+            response = Response.from_Json(responseData)
         except JSONDecodeError:
             message = f"Invalid data received: {responseData}"
             if responseData.startswith("-m"):

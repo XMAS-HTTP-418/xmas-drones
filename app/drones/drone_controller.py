@@ -65,7 +65,7 @@ class DroneController(Drone):
         if self.is_master:
             if self.check_for_incomming_mission():
                 self.get_incomming_mission()
-                pass # recalculate mission
+                pass  # recalculate mission
             if self.socket_receive_status_from_slave():
                 pass
         else:

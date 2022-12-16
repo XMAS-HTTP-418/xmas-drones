@@ -13,7 +13,7 @@ class SlaveHandler(Thread):
         self.address = SlaveInfo.fullAddress
         self.index = clientIndex
         self.connectionTime = datetime.now().strftime(timeFormat)
-       # self.requestHandler = RequestHandler(changesEvent, clientIndex)
+        # self.requestHandler = RequestHandler(changesEvent, clientIndex)
         self.onClientDisconnected = lambda *_: None
         self.pendedToDisconnect = False
 
@@ -25,7 +25,7 @@ class SlaveHandler(Thread):
         while receivedData := self.getDataPackage():
             requestParts.append(receivedData.decode(dataPackageEncoding))
             if receivedData.endswith(dataClosingSequence):
-                requestData = ''.join(requestParts)[:-len(dataClosingSequence)]
+                requestData = ''.join(requestParts)[: -len(dataClosingSequence)]
                 for singleRequestData in requestData.split(dataClosingSequence.decode(dataPackageEncoding)):
                     self.handleRequest(singleRequestData)
                 requestParts = []
