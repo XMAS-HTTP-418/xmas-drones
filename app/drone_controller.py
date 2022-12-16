@@ -1,4 +1,4 @@
-from dijkstra import Dijkstra, getArrayHeightMap
+from dijkstra import Dijkstra, get_array_height_map
 from drone import Drone
 from station import StationType
 from task import Task
@@ -7,6 +7,8 @@ from utils import get_closest_station_to_drone
 from task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
+
+
 class DroneController(Drone):
     def socket_get_incomming_mission(self):
         pass
@@ -36,22 +38,22 @@ class DroneController(Drone):
         pass
 
     def pathfinder_regen(self):
-        heightmap = getArrayHeightMap(MISSION_AREA_IMAGE)
+        heightmap = get_array_height_map(MISSION_AREA_IMAGE)
         self.pathfinder = Dijkstra(heightmap, start=(int(self.position[0]), int(self.position[1])))
 
     def fly_towards_recharge_station(self):
         target_pos = get_closest_station_to_drone(self, self.stations, StationType.RECHARGE)
-        next_move = self.pathfinder.getRoute((target_pos[0], target_pos[1]))[1]
+        next_move = self.pathfinder.get_route((target_pos[0], target_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def fly_towards_task(self):
         task_pos = self.task.get_closest_position(self)
-        next_move = self.pathfinder.getRoute((task_pos[0], task_pos[1]))[1]
+        next_move = self.pathfinder.get_route((task_pos[0], task_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def check_task_area(self):
         delta = self.task.get_closest_position(self) - self.position
-        return np.sqrt(delta[0]**2+delta[1]**2) < DISTANCE_ARRIVAL_THRESHOLD
+        return np.sqrt(delta[0] ** 2 + delta[1] ** 2) < DISTANCE_ARRIVAL_THRESHOLD
 
     def activate_load(self):
         pass

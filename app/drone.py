@@ -4,7 +4,7 @@ from task import Task
 from station import Station, StationType
 from load import LoadType, Load
 from dataclasses import dataclass
-from dijkstra import Dijkstra, getArrayHeightMap
+from dijkstra import Dijkstra, get_array_height_map
 from utils import get_closest_station_to_drone
 
 
@@ -33,9 +33,9 @@ class Drone:
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         if not self.pathfinder:
-            heightmap = getArrayHeightMap('data/height_map.png')
+            heightmap = get_array_height_map('data/height_map.png')
             self.pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
-        distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
+        distance = self.pathfinder.get_distances((int(end_position[0]), int(end_position[1])))
         return distance * self.power
 
     def evaluate_mission_cost(self, task: Task) -> np.float64:
