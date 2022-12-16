@@ -79,7 +79,12 @@ class DroneController(Drone):
             task = filter(lambda x: x.id == self.assignments[request_data['controller']][1], self.tasks)[0]
             return Response(True,self.id,task, False)
 
-
+    def socket_mission_recalculate(self):
+        DataParser.load_data(self.mission)
+        cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
+        tasks = calculate_task_assignments(cost_matrix)
+        self.assignments = tasks
+        self.tasks = DataParser.missions
 
     def socket_check_master(self):
         pass
@@ -115,6 +120,7 @@ class DroneController(Drone):
             if self.check_for_incomming_mission():
                 # recalculate mission
                 data = self.get_incomming_mission()
+                self.mission = data
                 DataParser.load_data(data)
                 cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
                 tasks = calculate_task_assignments(cost_matrix)
