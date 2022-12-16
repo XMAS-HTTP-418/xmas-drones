@@ -17,7 +17,7 @@ from PIL import Image
 
 from config import TARGETS_SCANNING_IMAGE
 
-im = Image.open(TARGETS_SCANNING_IMAGE).convert("L")  # Can be many different formats.
+im = Image.open(TARGETS_SCANNING_IMAGE).convert("RGB")  # Can be many different formats.
 data = iter(im.getdata())
 rows, cows = im.size
 
