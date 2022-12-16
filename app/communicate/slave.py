@@ -1,5 +1,3 @@
-from config import SOCKET_HOST, SOCKET_PORT
-from drones import DroneController
 import socket as Socket
 from json import JSONDecodeError
 from threading import Thread
@@ -75,7 +73,7 @@ class SlaveMaster(Thread):
             self.on_error(f"Unsupportable response {response_data}")
 
 
-class Slave(DroneController, Thread):
+class Slave(Thread):
     def __init__(self, slaveWorker: SlaveMaster):
         self.slave_worker = slaveWorker
 

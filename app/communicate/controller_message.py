@@ -11,8 +11,8 @@ class MessageController:
         self.clientIndex = clientIndex
         self.currentController = None
 
-
+    # TODO здесь парсим и раскидваем request
     def handle(self, requestData) -> Response:
         request = Request.from_Json(requestData)
-        Logger.log(f"Client #{self.clientIndex} requested {request.controller}/{request.action}")
+        Logger.log(f"Slave #{self.clientIndex} requested {request.controller}/{request.action}")
         return Response(True,"dsa",{"sam": "takoy"}, False)

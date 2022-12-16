@@ -49,7 +49,7 @@ class Drone:
             additional_cost = self.calculate_energy_for_flying(
                 self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
             )
-        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, task.get_closest_position(self))
+        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, task.get_closest_position(self.position))
         return additional_cost + flying_to_mission_cost
 
 

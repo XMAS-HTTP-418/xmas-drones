@@ -25,6 +25,7 @@ class Node:
 
 
 class Dijkstra:
+    """Алгоритм Дейкстры"""
     def __init__(self, heightMap, start=(0, 0)):
         self.start = start
         self.kRowCow = tuple(zip((-1, -1, -1, 0, 1, 1, 1, 0), (-1, 0, 1, 1, 1, 0, -1, -1)))

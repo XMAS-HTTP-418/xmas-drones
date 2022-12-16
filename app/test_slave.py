@@ -1,6 +1,6 @@
 from config import SOCKET_HOST, SOCKET_PORT
-from communicate.slave import SlaveMaster
-from communicate.slave import Request
+from communicate.slave import SlaveMaster, Request
+
 
 if __name__ == '__main__':
     server2 = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
