@@ -1,7 +1,7 @@
 from datetime import datetime
 from socket import socket
 from threading import Thread
-from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT, TIME_DRONE, TIME_HELLO
+from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT, TIME_DRONE, TIME_PING
 from typing import Callable
 from communicate.models import SlaveInfo, Response
 from logger import Logger
@@ -47,7 +47,7 @@ class SlaveHandler(Thread):
         except ConnectionError:
             return 0
         except TimeoutError:
-            return self.time_to_hello()
+            return self.time_to_ping()
 
 
     def handle_request(self, requestData):
@@ -56,11 +56,11 @@ class SlaveHandler(Thread):
         self.respond(response.toJson())
 
 
-    def time_to_hello(self) -> bytes:
+    def time_to_ping(self) -> bytes:
         try:
             request = Response(True,self.index,"hello")
             self.respond(request.toJson())
-            self.connection.settimeout(TIME_HELLO) # выкидывает ошибку
+            self.connection.settimeout(TIME_PING) # выкидывает ошибку
             recvData = self.connection.recv(DATA_PACKAGE_SIZE)
             return recvData
         except ConnectionError:
