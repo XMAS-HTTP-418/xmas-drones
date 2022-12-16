@@ -1,6 +1,6 @@
 from search.dijkstra import Dijkstra, get_array_height_map
-from drones.drone import Drone
-from station import StationType
+from drones.drone import Drone, get_closest_station_to_drone
+from models import StationType
 from tasks.task import Task
 from data_parser import DataParser
 #from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
