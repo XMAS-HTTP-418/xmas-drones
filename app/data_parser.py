@@ -1,4 +1,4 @@
-from json import load
+import json
 import numpy as np
 from mission import Mission, MissionType
 from drone import Drone
@@ -58,7 +58,7 @@ class DataParser:
 
     @classmethod
     def load_data(cls, filename: str) -> None:
-        data = load(open(filename))
+        data = json.load(open(filename))
         cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
