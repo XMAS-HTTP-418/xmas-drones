@@ -1,9 +1,12 @@
 from search.dijkstra import Dijkstra, get_array_height_map
 from drones.drone import Drone
-from communicate.models import Request
+from communicate.models import Request, Response
 from data_parser.stations import StationType
 from tasks.task import Task
 from data_parser import DataParser
+from config import SOCKET_HOST, SOCKET_PORT
+from communicate.slave import SlaveMaster, Request
+from communicate.master import Server
 #from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
@@ -20,12 +23,24 @@ class DroneController(Drone):
     def socket_check_for_incomming_task(self):
         pass
 
-    def socket_send_task_assignment(self, drone_id: int, task: Task) -> None:
+    def socket_ask_for_task_assignment(self, server: SlaveMaster) -> None:
+        request = Request(
+            controller=self.id,
+            action="ask task",
+            body={}
+        )
+        server.requestData(request, lambda data: self.task = Task(**data))
+
+    def socket_send_task_assignment(self, server: SlaveMaster, drone_id: int, task: Task) -> None:
         request = Request(
             controller=self.id,
             action='task assignment',
-            body=task.id
+            body={
+                'task_id': task.id,
+                'drone_id': drone_id
+            }
         )
+        server.requestData(request, lambda _: print('sent'))
 
     def socket_get_task_assignment(self) -> Task:
         pass
@@ -44,15 +59,32 @@ class DroneController(Drone):
             }
         )
 
-    def socket_send_status_to_master(self):
-        pass
+    def socket_master_message_handler(self, request_data: dict):
+        if request_data['action'] == 'status':
+            drone = request_data['body']
+            if list(filter(lambda x: x.id == drone['id'], self.slaves)):
+                for slave in self.slaves:
+                    if slave.id == drone['id']:
+                        slave.position = drone['position']
+                        slave.battery = drone['battery']
+            else:
+                self.slaves.append(Drone(
+                    id=drone['id'],
+                    position = np.array(drone['position']),
+                    battery=np.array['battery'],
+                    is_master=False
+                ))
+            return Response(True,self.id, "Done", False)
+        if request_data['action'] == 'ask task':
+
+
+
 
     def socket_check_master(self):
         pass
 
     def vote_for_master(self):
         pass
-
 
     def pathfinder_regen(self):
         heightmap = get_array_height_map(MISSION_AREA_IMAGE)
@@ -75,11 +107,10 @@ class DroneController(Drone):
     def activate_load(self):
         pass
 
-    def assign_task(self, task: Task):
-        self.task = task
-
     def run(self):
         if self.is_master:
+            server = Server(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler)
+            server.start()
             if self.check_for_incomming_mission():
                 # recalculate mission
                 data = self.get_incomming_mission()
@@ -91,6 +122,10 @@ class DroneController(Drone):
             if self.socket_receive_status_from_slave():
                 pass
         else:
+            server = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
+            if server.connect_to_server():
+                server.start()
+                server.requestData(Request("dsa", "dsa", "ti dyrek"), lambda _: print('sent'))
             if not self.socket_check_master():
                 self.vote_for_master()
             if self.check_for_incomming_task():

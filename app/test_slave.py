@@ -6,5 +6,5 @@ if __name__ == '__main__':
     server2 = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
     if server2.connect_to_server():
         server2.start()
-        server2.requestData(Request("dsa","dsa","ti dyrek"), lambda _: print('sent'))
+        server2.requestData(Request("dsa","dsa","ti dyrek"), lambda _: print(_.toJson()))
     # slave = Slave(server2)
