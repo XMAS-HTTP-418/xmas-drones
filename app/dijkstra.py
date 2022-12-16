@@ -4,8 +4,8 @@ import numpy as np
 from typing import List
 
 
-def getArrayHeightMap() -> np.ndarray:
-    im = Image.open('map.bmp').convert("L")  # Can be many different formats.
+def getArrayHeightMap(filename: str) -> np.ndarray:
+    im = Image.open(filename).convert("L")  # Can be many different formats.
     data = iter(im.getdata())
     rows, cows = im.size
 
