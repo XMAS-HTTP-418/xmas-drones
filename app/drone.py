@@ -22,11 +22,13 @@ class Drone:
     load_id: int | None
     mission_id: int | None
     load: Optional[Load]
+    pathfinder: Optional[Dijkstra]
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
-        heightmap = getArrayHeightMap('data/height_map.png')
-        pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
-        distance = pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
+        if not self.pathfinder:
+            heightmap = getArrayHeightMap('data/height_map.png')
+            pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
+        distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
         return distance*self.power
 
     def evaluate_mission_cost(self, mission: Mission) -> np.float:
