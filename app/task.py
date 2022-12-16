@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 from enum import Enum
 
-class MissionType(str, Enum):
+class TaskType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
     HD_CAMERA = 'HD_CAMERA'
@@ -12,9 +12,9 @@ class MissionType(str, Enum):
     GEORADAR = 'GEORADAR'
 
 @dataclass
-class Mission:
+class Task:
     id: int
-    type: MissionType
+    type: TaskType
     priority: int
     periodic: float
     progress: Optional[float]
