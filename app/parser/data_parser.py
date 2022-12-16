@@ -1,4 +1,3 @@
-import json
 import numpy as np
 from app.tasks.task import Task, TaskType
 from drones.drone import Drone

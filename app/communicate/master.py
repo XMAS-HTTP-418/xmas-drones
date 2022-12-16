@@ -1,12 +1,10 @@
 # server
 import socket as Socket
-import time
-from drones.drone_controller import DroneController
-from config import SOCKET_HOST, SOCKET_PORT
+from drones import DroneController
 from threading import Thread
 from logger import Logger
 from models import SlaveInfo
-from slaveHandler import SlaveHandler
+from app.communicate.slave_handler import SlaveHandler
 
 
 class Server(Thread):
@@ -16,7 +14,7 @@ class Server(Thread):
         self.socket.bind((address, port))
         self.__isWorking = False
         self.slaves = {}
-        self.clientIndex = 0
+        self.client_index = 0
 
     @property
     def isWorking(self):
@@ -24,26 +22,26 @@ class Server(Thread):
 
     def run(self):
         self.__isWorking = True
-        self.listenClients()
+        self.listen_clients()
 
-    def listenClients(self):
+    def listen_clients(self):
         while self.__isWorking:
             self.socket.listen()
-            slaveInfo = self.waitSlaveConnection()
+            slave_info = self.wait_slave_connection()
             if not self.__isWorking:
                 return
-            self.serveClient(slaveInfo)
+            self.serve_client(slave_info)
 
-    def serveClient(self, slaveInfo: SlaveInfo):
-        slaveHandler = SlaveHandler(slaveInfo, self.clientIndex)
-        self.slaves[self.clientIndex] = slaveHandler
-        self.clientIndex += 1
-        slaveHandler.onClientDisconnected = self.onClientDisconnected
-        slaveHandler.start()
+    def serve_client(self, slave_info: SlaveInfo):
+        slave_handler = SlaveHandler(slave_info, self.client_index)
+        self.slaves[self.client_index] = slave_handler
+        self.client_index += 1
+        slave_handler.on_client_disconnected = self.on_client_disconnected
+        slave_handler.start()
 
-        Logger.log(f"Slave #{slaveHandler.index} {slaveHandler.address} has connected")
+        Logger.log(f"Slave #{slave_handler.index} {slave_handler.address} has connected")
 
-    def waitSlaveConnection(self):
+    def wait_slave_connection(self):
         try:
             slaveInfo = self.socket.accept()
             return SlaveInfo(slaveInfo)
@@ -51,7 +49,7 @@ class Server(Thread):
             if self.__isWorking:
                 raise
 
-    def onClientDisconnected(self, client: SlaveHandler):
+    def on_client_disconnected(self, client: SlaveHandler):
         try:
             self.slaves.pop(client.index)
         except KeyError as e:
@@ -63,11 +61,10 @@ class Server(Thread):
         self.socket.close()
         client: SlaveHandler
         for client in self.slaves.values():
-            client.pendedToDisconnect = True
+            client.pended_to_disconnect = True
             client.disconnect()
         Logger.command("Server has stopped")
 
+
 class Master(DroneController, Server):
     pass
-
-

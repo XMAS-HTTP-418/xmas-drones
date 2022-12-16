@@ -6,10 +6,6 @@ MISSION_AREA_IMAGE = 'data/mission_area.png'
 TARGETS_SCANNING_IMAGE = 'data/targets_scanning.png'
 TARGETS_POLLINATION_IMAGE = 'data/targets_pollinating.png'
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
 # colors
 MIN_COLOR_VALUE = 255 + 255 + 255
 
@@ -34,14 +30,11 @@ SOCKET_PORT = 65432  # The port used by the server
 
 POINT = tuple[int, int]
 POINT_LIST = list[POINT]
-<<<<<<< HEAD
 
 
 # SOCKETS
 
-dataPackageEncoding = "utf-8"
-dataClosingSequence = b"\r\n\r\n"
-dataPackageSize = 1024
-timeFormat = "%H:%M:%S"
-=======
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
+DATA_PACKAGE_ENCODING = "utf-8"
+DATA_CLOSING_SEQUENCE = b"\r\n\r\n"
+DATA_PACKAGE_SIZE = 1024
+TIME_FORMAT = "%H:%M:%S"

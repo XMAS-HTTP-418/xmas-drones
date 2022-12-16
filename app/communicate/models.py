@@ -1,14 +1,13 @@
-from dataclasses import dataclass
 from json import JSONDecoder, JSONEncoder
 
 
 class SlaveInfo:
-    def __init__(self, rawClientInfo):
-        self.connection = rawClientInfo[0]
-        rawAddress = rawClientInfo[1]
-        self.ipAddress = rawAddress[0]
-        self.port = rawAddress[1]
-        self.fullAddress = f"{self.ipAddress}:{self.port}"
+    def __init__(self, raw_client_info):
+        self.connection = raw_client_info[0]
+        raw_address = raw_client_info[1]
+        self.ip_address = raw_address[0]
+        self.port = raw_address[1]
+        self.full_address = f"{self.ip_address}:{self.port}"
 
 
 class Request:
@@ -18,20 +17,20 @@ class Request:
         self.body = body
 
     @staticmethod
-    def from_Json(requestJson):
-        jsonRequest = JSONDecoder().decode(requestJson)
-        controller = jsonRequest["controller"]
-        action = jsonRequest["action"]
-        body = jsonRequest["body"]
+    def from_Json(request_json):
+        json_request = JSONDecoder().decode(request_json)
+        controller = json_request["controller"]
+        action = json_request["action"]
+        body = json_request["body"]
         return Request(controller, action, body)
 
-    def toJson(self):
-        requestDict = {
+    def to_json(self):
+        request_dict = {
             "controller": self.controller,
             "action": self.action,
             "body": self.body,
         }
-        requestJson = JSONEncoder().encode(requestDict)
+        requestJson = JSONEncoder().encode(request_dict)
         return requestJson
 
 

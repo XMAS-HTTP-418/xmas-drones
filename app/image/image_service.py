@@ -3,7 +3,7 @@ from typing import NamedTuple
 
 import cv2
 import numpy as np
-from kd_tree import nearest_neighbor_kdtree
+from search import nearest_neighbor_kdtree
 
 from config import (
     MIN_COLOR_VALUE,

@@ -1,6 +1,6 @@
 from typing import Optional
 from dataclasses import dataclass
-from image_service import ImageService
+from image.image_service import ImageService
 import numpy as np
 from drone import Drone
 from enum import Enum

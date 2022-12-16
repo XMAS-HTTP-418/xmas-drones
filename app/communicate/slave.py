@@ -1,9 +1,9 @@
 from config import SOCKET_HOST, SOCKET_PORT
-from drone_controller import DroneController
+from drones import DroneController
 import socket as Socket
 from json import JSONDecodeError
 from threading import Thread
-from config import dataClosingSequence, dataPackageEncoding, dataPackageSize
+from config import DATA_CLOSING_SEQUENCE, DATA_PACKAGE_ENCODING, DATA_PACKAGE_SIZE
 from models import Request, Response
 
 
@@ -13,16 +13,16 @@ class SlaveMaster(Thread):
         self.address = address
         self.port = port
         self.socket = Socket.socket()
-        self.responseQueue = []
+        self.response_queue = []
 
-        self.onError = lambda *_: None
-        self.onServerDisconnected = lambda *_: None
-        self.onChangesReceived = lambda *_: None
+        self.on_error = lambda *_: None
+        self.on_server_disconnected = lambda *_: None
+        self.on_changes_received = lambda *_: None
 
     def run(self):
         self.listenResponse()
 
-    def connectToServer(self):
+    def connect_to_server(self):
         try:
             self.socket.connect((self.address, self.port))
         except ConnectionRefusedError:
@@ -30,63 +30,63 @@ class SlaveMaster(Thread):
         return True
 
     def closeConnection(self):
-        self.onServerDisconnected = lambda: None
+        self.on_server_disconnected = lambda: None
         self.socket.close()
 
     def listenResponse(self):
-        responseParts = []
-        while receivedData := self.getDataPackage():
-            responseParts.append(receivedData.decode(dataPackageEncoding))
-            if receivedData.endswith(dataClosingSequence):
-                responseData = ''.join(responseParts)[: -len(dataClosingSequence)]
-                self.handleResponse(responseData)
-                responseParts = []
-        self.onServerDisconnected()
+        response_parts = []
+        while received_data := self.get_data_package():
+            response_parts.append(received_data.decode(DATA_PACKAGE_ENCODING))
+            if received_data.endswith(DATA_CLOSING_SEQUENCE):
+                response_data = ''.join(response_parts)[: -len(DATA_CLOSING_SEQUENCE)]
+                self.handle_response(response_data)
+                response_parts = []
+        self.on_server_disconnected()
 
-    def getDataPackage(self):
+    def get_data_package(self):
         try:
-            return self.socket.recv(dataPackageSize)
+            return self.socket.recv(DATA_PACKAGE_SIZE)
         except ConnectionError:
             return 0
 
-    def requestData(self, request: Request, responseCallback):
-        requestData = request.toJson().encode(dataPackageEncoding)
-        requestData += dataClosingSequence
-        self.responseQueue.append(responseCallback)
-        self.socket.sendall(requestData)
+    def requestData(self, request: Request, response_callback):
+        request_data = request.to_json().encode(DATA_PACKAGE_ENCODING)
+        request_data += DATA_CLOSING_SEQUENCE
+        self.response_queue.append(response_callback)
+        self.socket.sendall(request_data)
 
-    def handleResponse(self, responseData: str):
+    def handle_response(self, response_data: str):
         try:
-            response = Response.from_Json(responseData)
+            response = Response.from_json(response_data)
         except JSONDecodeError:
-            message = f"Invalid data received: {responseData}"
-            if responseData.startswith("-m"):
-                serverMessage = responseData[2:]
-                message = f"Message from server:\n{serverMessage}"
-            self.onError(message)
+            message = f"Invalid data received: {response_data}"
+            if response_data.startswith("-m"):
+                server_message = response_data[2:]
+                message = f"Message from server:\n{server_message}"
+            self.on_error(message)
             return
         if response.changes:
-            self.onChangesReceived(response)
-        elif len(self.responseQueue) > 0:
-            callback = self.responseQueue.pop(0)
+            self.on_changes_received(response)
+        elif len(self.response_queue) > 0:
+            callback = self.response_queue.pop(0)
             callback(response)
         else:
-            self.onError(f"Unsupportable response {responseData}")
+            self.on_error(f"Unsupportable response {response_data}")
 
 
 class Slave(DroneController, Thread):
     def __init__(self, slaveWorker: SlaveMaster):
-        self.slaveWorker = slaveWorker
+        self.slave_worker = slaveWorker
 
     def run(self):
         self.init()
 
     def init(self):
-        tryConnectToServer = self.slaveWorker.connectToServer()
+        try_connect_to_server = self.slave_worker.connect_to_server()
 
 
 if __name__ == '__main__':
     server2 = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
-    if server2.connectToServer():
+    if server2.connect_to_server():
         server2.run()
     # slave = Slave(server2)
