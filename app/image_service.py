@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import NamedTuple
 
 import cv2
@@ -5,19 +6,26 @@ import numpy as np
 
 from config import MIN_COLOR_VALUE, MISSION_AREA_IMAGE, MISSION_TARGETS_IMAGE, WHITE_COLOR, BLACK_COLOR
 
+
 class Point(NamedTuple):
     x: int
     y: int
-    
+
     def __repr__(self) -> str:
         return f'({self.x}, {self.y})'
 
-class ImageService:
 
+class TargetType(Enum, str):
+    SCANNING = 'scanning'
+    POLLINATION = 'pollination'
+
+
+class ImageService:
     def __init__(self) -> None:
         self.mission_area = cv2.imread(MISSION_AREA_IMAGE)
         self.mission_targets = cv2.imread(MISSION_TARGETS_IMAGE)
         self.targets_coords = []
+        self.target_type: TargetType | None = None
 
     def get_targets_coords(self) -> list[Point]:
         """
@@ -39,15 +47,13 @@ class ImageService:
                 if sublist:
                     target_shell.append(sublist)
                 j += 1
-                    
-        
+
             for sublist in target_shell:
                 for x_value in (max(sublist), min(sublist)):
                     self.targets_coords.append(Point(x=i, y=x_value))
-                
 
         return self.targets_coords
-    
+
     def overlay_images(self):
         ...
 
