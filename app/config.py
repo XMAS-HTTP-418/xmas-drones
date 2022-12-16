@@ -5,10 +5,11 @@ import numpy as np
 MISSION_AREA_IMAGE = 'data/mission_area.png'
 TARGETS_SCANNING_IMAGE = 'data/targets_scanning.png'
 TARGETS_POLLINATION_IMAGE = 'data/targets_pollinating.png'
-WHITE_COLOR = np.array([255, 255, 255], dtype='uint8')
-BLACK_COLOR = np.array([0, 0, 0], dtype='uint8')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
 # colors
 MIN_COLOR_VALUE = 255 + 255 + 255
 
@@ -33,6 +34,7 @@ SOCKET_PORT = 65432  # The port used by the server
 
 POINT = tuple[int, int]
 POINT_LIST = list[POINT]
+<<<<<<< HEAD
 
 
 # SOCKETS
@@ -41,3 +43,5 @@ dataPackageEncoding = "utf-8"
 dataClosingSequence = b"\r\n\r\n"
 dataPackageSize = 1024
 timeFormat = "%H:%M:%S"
+=======
+>>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3

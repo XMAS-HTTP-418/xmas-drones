@@ -1,7 +1,5 @@
 from dijkstra import Dijkstra, get_array_height_map
 from drone import Drone
-<<<<<<< HEAD
-=======
 from station import StationType
 from task import Task
 from data_parser import DataParser
@@ -9,7 +7,6 @@ from utils import get_closest_station_to_drone
 from task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
 
 
 class DroneController(Drone):
@@ -67,18 +64,8 @@ class DroneController(Drone):
     def run(self):
         if self.is_master:
             if self.check_for_incomming_mission():
-<<<<<<< HEAD
                 self.get_incomming_mission()
-                pass  # recalculate mission
-=======
-                # recalculate mission
-                data = self.get_incomming_mission()
-                DataParser.load_data(data)
-                cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
-                tasks = calculate_task_assignments(cost_matrix)
-                for task in enumerate(tasks):
-                    self.socket_send_task_assignment()
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
+                pass # recalculate mission
             if self.socket_receive_status_from_slave():
                 pass
         else:
@@ -89,13 +76,4 @@ class DroneController(Drone):
                 self.assign_task(task)
                 self.send_status_to_master()
 
-<<<<<<< HEAD
         # proceed with assignment
-=======
-        if self.battery < DRONE_BATTERY_THRESHOLD:
-            self.fly_towards_recharge_station()
-        else:
-            self.fly_towards_task()
-            if self.check_task_area():
-                self.activate_load()
->>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3

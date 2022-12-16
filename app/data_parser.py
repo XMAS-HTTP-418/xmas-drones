@@ -67,3 +67,7 @@ class DataParser:
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
         cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ee31d3b7825cccb1fe919bdeca6499693f849dd3
