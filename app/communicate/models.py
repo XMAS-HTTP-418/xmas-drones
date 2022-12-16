@@ -35,17 +35,17 @@ class Request:
 
 
 class Response:
-    def __init__(self, succeed: bool, errorMessage: str, body: dict = None, changes: bool = False):
-        self.changes = changes
-        self.body = body
-        self.errorMessage = errorMessage
+    def __init__(self, succeed: bool, controller, action, body=None):
         self.succeed = succeed
+        self.controller = controller
+        self.action = action
+        self.body = body
 
     def toJson(self):
         responseDict = {
-            "succeed": self.succeed,
-            "errorMessage": self.errorMessage,
-            "changes": self.changes,
+            "succesed": self.succeed,
+            "controller": self.controller,
+            "action": self.action,
             "body": self.body,
         }
         responseJson = JSONEncoder().encode(responseDict)
@@ -54,10 +54,10 @@ class Response:
     @staticmethod
     def from_json(responseJson):
         jsonResponse = JSONDecoder().decode(responseJson)
+        succesed = jsonResponse["succesed"]
+        controller = jsonResponse["controller"]
+        action= jsonResponse["action"]
         body = jsonResponse["body"]
-        errorMessage = jsonResponse["errorMessage"]
-        succeed = jsonResponse["succeed"]
-        changes = jsonResponse["changes"]
-        return Response(succeed, errorMessage, body, changes)
+        return Response(succesed, action, body, controller)
 
 
