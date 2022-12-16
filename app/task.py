@@ -1,9 +1,11 @@
 from typing import Optional
 from dataclasses import dataclass
+from image_service import ImageService
 import numpy as np
+from drone import Drone
 from enum import Enum
 
-class MissionType(str, Enum):
+class TaskType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
     HD_CAMERA = 'HD_CAMERA'
@@ -12,12 +14,14 @@ class MissionType(str, Enum):
     GEORADAR = 'GEORADAR'
 
 @dataclass
-class Mission:
+class Task:
     id: int
-    type: MissionType
+    type: TaskType
     priority: int
     periodic: float
     progress: Optional[float]
 
-    def get_closest_position(self) -> np.array:
-        pass
+    def get_closest_position(self, drone: Drone) -> np.array:
+        imageservice = ImageService()
+        nearest_point = imageservice.get_nearest_target([(drone.position[0], drone.position[1])])
+        return nearest_point

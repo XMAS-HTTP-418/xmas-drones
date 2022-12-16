@@ -1,11 +1,11 @@
 from typing import List, Optional
 import numpy as np
-from mission import Mission
-from station import Station
+from task import Task
+from station import Station, StationType
 from load import LoadType, Load
 from dataclasses import dataclass
-from dijkstra import Dijkstra, getArrayHeightMap
-from data_parser import DataParser
+from dijkstra import Dijkstra, get_array_height_map
+from utils import get_closest_station_to_drone
 
 
 @dataclass
@@ -20,9 +20,9 @@ class Drone:
     max_battery: float
     recharge_rate: float
     is_master: bool
-    load_id: int | None
-    mission_id: int | None
     load: Optional[Load]
+    task: Optional[Task]
+    stations: Optional[list[Station]]
     pathfinder: Optional[Dijkstra]
     max_time_fly: float = 0.5
 
@@ -33,28 +33,25 @@ class Drone:
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         if not self.pathfinder:
-            heightmap = getArrayHeightMap('data/height_map.png')
+            heightmap = get_array_height_map('data/height_map.png')
             self.pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
-        distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
+        distance = self.pathfinder.get_distances((int(end_position[0]), int(end_position[1])))
         return distance * self.power
 
-    def assign_mission(self, mission: Mission):
-        self.mission_id = mission.id
-
-    def evaluate_mission_cost(self, mission: Mission) -> np.float64:
+    def evaluate_mission_cost(self, task: Task) -> np.float64:
         additional_cost = 0.0
         if self.load_id:
-            if self.load.type == LoadType[mission.type]:
+            if self.load.type == LoadType[task.type]:
                 additional_cost = 0.0
             else:  # return to station to store and pickup
                 additional_cost += self.calculate_energy_for_flying(
-                    self.position, DataParser.get_closest_station_by_load_type(self, LoadType[mission.type])
+                    self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
                 )
         else:  # return to station to pickup
             additional_cost = self.calculate_energy_for_flying(
-                self.position, DataParser.get_closest_station_by_load_type(self, LoadType[mission.type])
+                self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
             )
-        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, mission.get_closest_position())
+        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, task.get_closest_position(self))
         return additional_cost + flying_to_mission_cost
 
 

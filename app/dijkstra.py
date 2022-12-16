@@ -3,8 +3,8 @@ from PIL import Image
 import numpy as np
 from typing import List
 
-# TODO: to snake_case
-def getArrayHeightMap(filename: str) -> np.ndarray:
+
+def get_array_height_map(filename: str) -> np.ndarray:
     im = Image.open(filename).convert("L")  # Can be many different formats.
     data = iter(im.getdata())
     rows, cows = im.size
@@ -60,7 +60,7 @@ class Dijkstra:
                     h = np.sqrt(np.square(np.subtract(int(self.heightMap[i][j]), self.heightMap[cur.row][cur.cow])) + 1)
                     heappush(OPEN, Node(i, j, cur.cost + h))
 
-    def getNearestMinimumCoordinates(self, cur: tuple) -> tuple:
+    def get_nearest_minimum_coordinates(self, cur: tuple) -> tuple:
         mn = self.distances[cur]
         ans = cur
         for krow, kcow in self.kRowCow:
@@ -70,13 +70,13 @@ class Dijkstra:
                 ans = nx
         return ans
 
-    def getRoute(self, cur: tuple) -> List[tuple]:
+    def get_route(self, cur: tuple) -> List[tuple]:
         route = [cur]
         while cur != self.start:
-            cur = self.getNearestMinimumCoordinates(cur)
+            cur = self.get_nearest_minimum_coordinates(cur)
             route.append(cur)
         route.reverse()
         return route
 
-    def getDistances(self, cur: tuple) -> int:
+    def get_distances(self, cur: tuple) -> int:
         return self.distances[cur]
