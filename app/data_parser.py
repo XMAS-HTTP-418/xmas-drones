@@ -1,4 +1,3 @@
-from typing import Tuple, List
 from json import load
 import numpy as np
 from mission import Mission, MissionType
@@ -60,10 +59,10 @@ class DataParser:
     @classmethod
     def load_data(cls, filename: str) -> None:
         data = load(open(filename))
-        cls.drones = [cls.parse_drone(raw) for raw in data['drones']]
-        cls.loads = [cls.parse_load(raw) for raw in data['loads']]
-        cls.missions = [cls.parse_mission(raw) for raw in data['missions']]
-        cls.stations = [cls.parse_station(raw) for raw in data['stations']]
+        cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
+        cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
+        cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
+        cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
 
     @classmethod
     def get_closest_station_by_load_type(cls, drone: Drone, load_type: LoadType):
