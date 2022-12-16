@@ -22,7 +22,7 @@ class Task:
     periodic: float
     progress: Optional[float]
 
-    def get_closest_position(self, posytion: np.array) -> np.array:
+    def get_closest_position(self, position: np.array) -> np.array:
         imageservice = ImageService()
-        nearest_point = imageservice.get_nearest_target([(drone.position[0], drone.position[1])])
+        nearest_point = imageservice.get_nearest_target([(position[0], position[1])])
         return nearest_point
