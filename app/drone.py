@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List
 import numpy as np
 from mission import Mission
 from station import Station
@@ -19,7 +19,12 @@ class Drone:
     is_master: bool
     load_id: int | None
     mission_id: int | None
-    load: Optional[Load]
+    max_time_fly: float = 0.5
+
+    def get_time_fly(self) -> np.float64:
+        return self.max_time_fly * self.battery / self.max_battery
+
+    time_fly = property(get_time_fly)
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         pass
@@ -30,7 +35,7 @@ class Drone:
     def get_closest_station_with_load_type(self, load_type: LoadType) -> Station:
         pass
 
-    def evaluate_mission_cost(self, mission: Mission) -> np.float:
+    def evaluate_mission_cost(self, mission: Mission) -> np.float64:
         additional_cost = 0.0
         if self.load_id:
             if self.load.type == LoadType[mission.type]:
@@ -43,5 +48,8 @@ class Drone:
         flying_to_mission_cost = self.calculate_energy_for_flying(self.position, mission.get_closest_position())
         return additional_cost + flying_to_mission_cost
 
+# по сути функция поиск мастера
+def drone_with_max_fly(list:List[Drone]) -> Drone:
+    return max(list,key=lambda d: d.time_fly)
 
 
