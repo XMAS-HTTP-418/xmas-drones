@@ -35,7 +35,7 @@ class VisualizerService:
         fig = plt.figure(figsize=(120, 120))
         ax = fig.add_subplot()
 
-        targets = self.imageservice.targets_coords
+        targets = self.imageservice.target_shell_list
 
         x_values = np.array([])
         y_values = np.array([])

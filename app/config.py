@@ -4,7 +4,7 @@ import numpy as np
 # image files
 MISSION_AREA_IMAGE = 'data/mission_area.png'
 TARGETS_SCANNING_IMAGE = 'data/targets_scanning.png'
-TARGETS_POLLINATION_IMAGE = 'data/targets_pollinating.png'
+TARGETS_POLLINATING_IMAGE = 'data/targets_pollinating.png'
 
 # colors
 MIN_COLOR_VALUE = 255 + 255 + 255
@@ -13,8 +13,8 @@ MIN_COLOR_VALUE = 255 + 255 + 255
 COLOR_DICT_HSV = {
     'black': np.array([0, 0, 0], dtype='uint8'),
     'white': np.array([255, 255, 255], dtype='uint8'),
-    'red': np.array([0, 0, 125], dtype='uint8'),
-    'green': np.array([125, 0, 0], dtype='uint8'),
+    'red': np.array([125, 0, 0], dtype='uint8'),
+    'green': np.array([174, 174, 174], dtype='uint8'),
 }
 
 # distance
