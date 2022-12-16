@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 import numpy as np
 from mission import Mission
 from station import Station
@@ -23,6 +23,12 @@ class Drone:
     mission_id: int | None
     load: Optional[Load]
     pathfinder: Optional[Dijkstra]
+    max_time_fly: float = 0.5
+
+    def get_time_fly(self) -> np.float64:
+        return self.max_time_fly * self.battery / self.max_battery
+
+    time_fly = property(get_time_fly)
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         if not self.pathfinder:
@@ -31,7 +37,7 @@ class Drone:
         distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
         return distance*self.power
 
-    def evaluate_mission_cost(self, mission: Mission) -> np.float:
+    def evaluate_mission_cost(self, mission: Mission) -> np.float64:
         additional_cost = 0.0
         if self.load_id:
             if self.load.type == LoadType[mission.type]:
@@ -43,5 +49,8 @@ class Drone:
         flying_to_mission_cost = self.calculate_energy_for_flying(self.position, mission.get_closest_position())
         return additional_cost + flying_to_mission_cost
 
+# по сути функция поиск мастера
+def drone_with_max_fly(list:List[Drone]) -> Drone:
+    return max(list,key=lambda d: d.time_fly)
 
 
