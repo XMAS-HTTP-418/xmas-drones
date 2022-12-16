@@ -23,6 +23,7 @@ class Drone:
     slaves: Optional[list]
     stations: Optional[list[Station]]
     assignments: Optional[list[tuple]]
+    tasks: Optional[Task]
     pathfinder: Optional[Dijkstra]
     max_time_fly: float = 0.5
 

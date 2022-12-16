@@ -29,7 +29,7 @@ class DroneController(Drone):
             action="ask task",
             body={}
         )
-        server.requestData(request, lambda data: self.task = Task(**data))
+        server.requestData(request, lambda data: (setattr(self,'task',Task(**data))))
 
     def socket_send_task_assignment(self, server: SlaveMaster, drone_id: int, task: Task) -> None:
         request = Request(
@@ -76,7 +76,8 @@ class DroneController(Drone):
                 ))
             return Response(True,self.id, "Done", False)
         if request_data['action'] == 'ask task':
-
+            task = filter(lambda x: x.id == self.assignments[request_data['controller']][1], self.tasks)[0]
+            return Response(True,self.id,task, False)
 
 
 
@@ -117,8 +118,8 @@ class DroneController(Drone):
                 DataParser.load_data(data)
                 cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
                 tasks = calculate_task_assignments(cost_matrix)
-                for task in enumerate(tasks):
-                    self.socket_send_task_assignment()
+                self.assignments = tasks
+                self.tasks = DataParser.missions
             if self.socket_receive_status_from_slave():
                 pass
         else:
