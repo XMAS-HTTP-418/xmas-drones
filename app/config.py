@@ -25,3 +25,8 @@ COLOR_DICT_HSV = {
     'orange': [[24, 255, 255], [10, 50, 70]],
     'gray': [[180, 18, 230], [0, 0, 40]],
 }
+
+# ALIASES
+
+POINT = tuple[int, int]
+POINT_LIST = list[POINT]

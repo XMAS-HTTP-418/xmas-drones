@@ -1,6 +1,9 @@
 import operator
 from typing import NamedTuple
 
+from config import POINT_LIST
+
+
 
 class BT(NamedTuple):
     """
@@ -38,7 +41,7 @@ def kdtree(points):
     """
     k = len(points[0])
 
-    def build(*, points, depth):
+    def build(*, points: list, depth):
         """Build a k-d tree from a set of points at a given
         depth.
         """
@@ -63,25 +66,15 @@ def kdtree(points):
     return build(points=list(points), depth=0)
 
 
-reference_points = [(1, 2), (3, 2), (4, 1), (3, 5)]
-kdtree(reference_points)
-
-BT(
-    value=(3, 5),
-    left=BT(value=(3, 2), left=BT(value=(1, 2), left=None, right=None), right=None),
-    right=BT(value=(4, 1), left=None, right=None),
-)
-
-
-def find_nearest_neighbor(*, tree, point):
+def find_nearest_neighbor(*, tree: BT, point: NNRecord):
     """Find the nearest neighbor in a k-d tree for a given
     point.
     """
     k = len(point)
 
-    best = None
+    best: NNRecord | None = None
 
-    def search(*, tree, depth):
+    def search(*, tree: BT, depth):
         """Recursively search through the k-d tree to find the
         nearest neighbor.
         """
@@ -109,30 +102,7 @@ def find_nearest_neighbor(*, tree, point):
     return best.point
 
 
-reference_points = [(1, 2), (3, 2), (4, 1), (3, 5)]
-tree = kdtree(reference_points)
-find_nearest_neighbor(tree=tree, point=(10, 1))
-
-reference_points = [(1, 2), (3, 2), (4, 1), (3, 5)]
-query_points = [(3, 4), (5, 1), (7, 3), (8, 9), (10, 1), (3, 3)]
-
-
-def nearest_neighbor_kdtree(*, query_points, reference_points):
+def nearest_neighbor_kdtree(*, query_points: POINT_LIST, reference_points: POINT_LIST):
     """Use a k-d tree to solve the "Nearest Neighbor Problem"."""
     tree = kdtree(reference_points)
     return {query_p: find_nearest_neighbor(tree=tree, point=query_p) for query_p in query_points}
-
-
-reference_points = [(1, 2), (3, 2), (4, 1), (3, 5)]
-query_points = [(3, 4), (5, 1), (7, 3), (8, 9), (10, 1), (3, 3)]
-
-nearest_neighbor_kdtree(
-    reference_points=reference_points,
-    query_points=query_points,
-)
-
-nn_kdtree = nearest_neighbor_kdtree(
-    reference_points=reference_points,
-    query_points=query_points,
-)
-print(nn_kdtree)
