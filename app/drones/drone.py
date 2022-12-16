@@ -10,17 +10,20 @@ from search.dijkstra import Dijkstra, get_array_height_map
 class Drone:
     id: int
     position: np.array
-    velocity: np.array
-    power: float
-    mass: float
-    max_load: float
+    # velocity: np.array
+    # power: float
+    # mass: float
+    # max_load: float
     battery: float
-    max_battery: float
-    recharge_rate: float
+    # max_battery: float
+    # recharge_rate: float
     is_master: bool
     load: Optional[Load]
     task: Optional[Task]
+    slaves: Optional[list]
     stations: Optional[list[Station]]
+    assignments: Optional[list[tuple]]
+    tasks: Optional[Task]
     pathfinder: Optional[Dijkstra]
     max_time_fly: float = 0.5
 
