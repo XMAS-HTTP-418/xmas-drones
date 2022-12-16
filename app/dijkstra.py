@@ -9,9 +9,7 @@ def getArrayHeightMap(filename: str) -> np.ndarray:
     data = iter(im.getdata())
     rows, cows = im.size
 
-    return np.array(
-        tuple(np.array(tuple(next(data) for j in range(cows)), dtype="uint8") for i in range(rows))
-    )
+    return np.array(tuple(np.array(tuple(next(data) for j in range(cows)), dtype="uint8") for i in range(rows)))
 
 
 class Node:
@@ -32,8 +30,7 @@ class Dijkstra:
         self.kRowCow = tuple(zip((-1, -1, -1, 0, 1, 1, 1, 0), (-1, 0, 1, 1, 1, 0, -1, -1)))
         self.size = (len(heightMap), len(heightMap[0]))
         self.heightMap = heightMap
-        self.distances = np.array(tuple(np.array([1 << 30] * self.size[0])
-                                        for _ in range(self.size[1])))
+        self.distances = np.array(tuple(np.array([1 << 30] * self.size[0]) for _ in range(self.size[1])))
         self.run()
 
     def validate(self, row, cow) -> tuple:
@@ -60,9 +57,7 @@ class Dijkstra:
             for krow, kcow in self.kRowCow:
                 i, j = self.validate(cur.row + krow, cur.cow + kcow)
                 if not using[i][j]:
-                    h = np.sqrt(
-                        np.square(np.subtract(int(self.heightMap[i][j]), self.heightMap[cur.row][
-                            cur.cow])) + 1)
+                    h = np.sqrt(np.square(np.subtract(int(self.heightMap[i][j]), self.heightMap[cur.row][cur.cow])) + 1)
                     heappush(OPEN, Node(i, j, cur.cost + h))
 
     def getNearestMinimumCoordinates(self, cur: tuple) -> tuple:
