@@ -115,7 +115,7 @@ class DroneController(Drone):
 
     def run(self):
         if self.is_master:
-            server = Server(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler)
+            server = Server(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler, self.socket_mission_recalculate)
             server.start()
             if self.check_for_incomming_mission():
                 # recalculate mission
