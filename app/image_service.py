@@ -28,14 +28,15 @@ class TargetType(str, Enum):
 
 
 class ImageService:
-    def __init__(self, mission_targets: str = TARGETS_POLLINATION_IMAGE) -> None:
+    def __init__(self, mission_targets: str = TARGETS_SCANNING_IMAGE) -> None:
         self.mission_area = cv2.imread(MISSION_AREA_IMAGE)
         self.mission_targets_image = mission_targets
         self.mission_targets = cv2.imread(mission_targets)
-        self.targets_coords = []
         self.target_type: TargetType | None = None
-
-    def get_targets_coords(self) -> list[Point]:
+        self.__target_coords = []
+        
+    @property
+    def targets_coords(self) -> list[Point]:
         """
         Получаем координаты цели
         """
@@ -58,9 +59,13 @@ class ImageService:
 
             for sublist in target_shell:
                 for x_value in (max(sublist), min(sublist)):
-                    self.targets_coords.append(Point(x=i, y=x_value))
+                    self.__target_coords.append(Point(x=i, y=x_value))
 
-        return self.targets_coords
+        return self.__target_coords
+    
+    
+    def nearest_target(self):
+        self
 
     def overlay_images(self):
         ...
@@ -74,5 +79,5 @@ class ImageService:
         return MIN_COLOR_VALUE - np.sum(color_list)
 
 
-a = ImageService().get_targets_coords()
-print(a)
+a = ImageService().targets_coords
+# print(a)

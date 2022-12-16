@@ -33,18 +33,19 @@ class VisualizerService:
         fig = plt.figure(figsize=(120, 120))
         ax = fig.add_subplot()
 
-        targets = self.imageservice.get_targets_coords()
+        targets = self.imageservice.targets_coords
 
-        x_values = []
-        y_values = []
+        x_values = np.array([])
+        y_values = np.array([])
 
         for target_point in targets:
-            x_values.append(target_point.x)
-            y_values.append(target_point.y)
+            x_values = np.append(x_values, target_point.x)
+            y_values = np.append(y_values, target_point.y)
 
         ax.scatter(x_values, y_values)
 
         plt.show()
 
-
-VisualizerService().show_targets()
+visualizer = VisualizerService()
+# visualizer.show_area()
+visualizer.show_targets()
