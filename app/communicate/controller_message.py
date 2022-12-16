@@ -16,5 +16,7 @@ class MessageController:
     def handle(self, requestData) -> Response:
         request = Request.from_Json(requestData)
         Logger.log(f"Slave #{self.clientIndex} requested {request.controller}/{request.action}")
-        return self.message_callback(requestData)
-        # return Response(True,"dsa",{"sam": "takoy"}, False)
+        if self.message_callback:
+            return self.message_callback(requestData) # требуется для создания коллбеков у дронов
+        else:
+            return Response(True,"dsa",{"das": "das"}) # старый функционал
