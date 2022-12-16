@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 from typing import List
 
-
+# TODO: to snake_case
 def getArrayHeightMap(filename: str) -> np.ndarray:
     im = Image.open(filename).convert("L")  # Can be many different formats.
     data = iter(im.getdata())
@@ -20,7 +20,7 @@ class Node:
         self.cow = cow
         self.cost = cost
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'Node'):
         return self.cost < other.cost
 
 
