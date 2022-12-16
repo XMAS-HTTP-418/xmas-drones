@@ -11,6 +11,7 @@ from config import (
     TARGETS_SCANNING_IMAGE,
     WHITE_COLOR,
     BLACK_COLOR,
+    COLOR_DICT_HSV
 )
 
 
@@ -34,7 +35,7 @@ class ImageService:
         self.mission_targets = cv2.imread(mission_targets)
         self.target_type: TargetType | None = None
         self.__target_coords = []
-        
+
     @property
     def targets_coords(self) -> list[Point]:
         """
@@ -47,6 +48,9 @@ class ImageService:
             while j < len(row) - 1:
                 sublist = []
                 while (row[j] != WHITE_COLOR).any() and (row[j] != BLACK_COLOR).any():
+                    if COLOR_DICT_HSV['green']:
+                        self.target_type = TargetType.POLLINATION
+                    
                     sublist.append(j)
                     if j < len(row) - 1:
                         j += 1
@@ -65,7 +69,7 @@ class ImageService:
     
     
     def nearest_target(self):
-        self
+        self.targets_coords
 
     def overlay_images(self):
         ...
