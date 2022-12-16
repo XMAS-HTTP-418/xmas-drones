@@ -4,7 +4,7 @@ import socket as Socket
 from json import JSONDecodeError
 from threading import Thread
 from config import DATA_CLOSING_SEQUENCE, DATA_PACKAGE_ENCODING, DATA_PACKAGE_SIZE
-from models import Request, Response
+from communicate.models import Request, Response
 
 
 class SlaveMaster(Thread):
@@ -85,8 +85,4 @@ class Slave(DroneController, Thread):
         try_connect_to_server = self.slave_worker.connect_to_server()
 
 
-if __name__ == '__main__':
-    server2 = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
-    if server2.connect_to_server():
-        server2.run()
-    # slave = Slave(server2)
+

@@ -1,10 +1,9 @@
-from dijkstra import Dijkstra, get_array_height_map
-from drone import Drone
+from search.dijkstra import Dijkstra, get_array_height_map
+from drones.drone import Drone
 from station import StationType
-from task import Task
+from tasks.task import Task
 from data_parser import DataParser
-from utils import get_closest_station_to_drone
-from task_assignment import calculate_task_assignments, get_cost_matrix
+#from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
 

@@ -2,7 +2,6 @@ from typing import Optional
 from dataclasses import dataclass
 from image.image_service import ImageService
 import numpy as np
-from drone import Drone
 from enum import Enum
 
 
@@ -23,7 +22,7 @@ class Task:
     periodic: float
     progress: Optional[float]
 
-    def get_closest_position(self, drone: Drone) -> np.array:
+    def get_closest_position(self, posytion: np.array) -> np.array:
         imageservice = ImageService()
         nearest_point = imageservice.get_nearest_target([(drone.position[0], drone.position[1])])
         return nearest_point

@@ -1,5 +1,5 @@
 import numpy as np
-from app.tasks.task import Task, TaskType
+from tasks.task import Task, TaskType
 from drones.drone import Drone
 from models import Load, LoadType, Station, StationType
 

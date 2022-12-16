@@ -3,8 +3,8 @@ import socket as Socket
 from drones import DroneController
 from threading import Thread
 from logger import Logger
-from models import SlaveInfo
-from app.communicate.slave_handler import SlaveHandler
+from communicate.models import SlaveInfo
+from communicate.slave_handler import SlaveHandler
 
 
 class Server(Thread):

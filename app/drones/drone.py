@@ -1,10 +1,9 @@
 from typing import List, Optional
 import numpy as np
-from app.tasks.task import Task
+from tasks.task import Task
 from models import Station, StationType, LoadType, Load
 from dataclasses import dataclass
-from app.search.dijkstra import Dijkstra, get_array_height_map
-from utils import get_closest_station_to_drone
+from search.dijkstra import Dijkstra, get_array_height_map
 
 
 @dataclass
@@ -57,3 +56,11 @@ class Drone:
 # по сути функция поиск мастера
 def drone_with_max_fly(list: List[Drone]) -> Drone:
     return max(list, key=lambda d: d.time_fly)
+
+
+# Перекинуть из utils к дронам
+def get_closest_station_to_drone(drone: Drone, stations: list[Station], station_type: StationType):
+    return min(
+        filter(lambda x: x.type == station_type, stations),
+        key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)),
+    )

@@ -3,7 +3,7 @@ from socket import socket
 from threading import Thread
 
 from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT
-from models import SlaveInfo
+from communicate.models import SlaveInfo
 
 
 class SlaveHandler(Thread):

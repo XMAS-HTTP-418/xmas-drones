@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from image_service import ImageService
+from image.image_service import ImageService
 
 
 class VisualizerService:
