@@ -15,4 +15,4 @@ class MessageController:
     def handle(self, requestData) -> Response:
         request = Request.from_Json(requestData)
         Logger.log(f"Slave #{self.clientIndex} requested {request.controller}/{request.action}")
-        return Response(True,"dsa",{"sam": "takoy"}, False)
+        return Response(True,"dsa","das",{"das":"das"})

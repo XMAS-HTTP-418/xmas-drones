@@ -64,9 +64,7 @@ class SlaveMaster(Thread):
                 message = f"Message from server:\n{server_message}"
             self.on_error(message)
             return
-        if response.changes:
-            self.on_changes_received(response)
-        elif len(self.response_queue) > 0:
+        if len(self.response_queue) > 0:
             callback = self.response_queue.pop(0)
             callback(response)
         else:
