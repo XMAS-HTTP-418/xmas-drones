@@ -2,7 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
 
-class LoadType(Enum, str):
+class LoadType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
     HD_CAMERA = 'HD_CAMERA'

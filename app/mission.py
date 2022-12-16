@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 from enum import Enum
 
-class MissionType(Enum, str):
+class MissionType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
     HD_CAMERA = 'HD_CAMERA'

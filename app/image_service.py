@@ -4,7 +4,7 @@ from typing import NamedTuple
 import cv2
 import numpy as np
 
-from config import MIN_COLOR_VALUE, MISSION_AREA_IMAGE, MISSION_TARGETS_IMAGE, WHITE_COLOR, BLACK_COLOR
+from config import MIN_COLOR_VALUE, MISSION_AREA_IMAGE, TARGETS_POLLINATION_IMAGE, TARGETS_SCANNING_IMAGE, WHITE_COLOR, BLACK_COLOR
 
 
 class Point(NamedTuple):
@@ -15,15 +15,16 @@ class Point(NamedTuple):
         return f'({self.x}, {self.y})'
 
 
-class TargetType(Enum, str):
+class TargetType(str, Enum):
     SCANNING = 'scanning'
     POLLINATION = 'pollination'
 
 
 class ImageService:
-    def __init__(self) -> None:
+    def __init__(self, mission_targets: str = TARGETS_POLLINATION_IMAGE) -> None:
         self.mission_area = cv2.imread(MISSION_AREA_IMAGE)
-        self.mission_targets = cv2.imread(MISSION_TARGETS_IMAGE)
+        self.mission_targets_image = mission_targets
+        self.mission_targets = cv2.imread(mission_targets)
         self.targets_coords = []
         self.target_type: TargetType | None = None
 
@@ -31,7 +32,7 @@ class ImageService:
         """
         Получаем координаты цели
         """
-        image = cv2.imread(MISSION_TARGETS_IMAGE)
+        image = cv2.imread(self.mission_targets_image)
         for i, row in enumerate(image):
             target_shell = []
             j = 0
