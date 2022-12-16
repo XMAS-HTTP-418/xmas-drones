@@ -47,5 +47,5 @@ class VisualizerService:
         plt.show()
 
 visualizer = VisualizerService()
-# visualizer.show_area()
+visualizer.show_area()
 visualizer.show_targets()

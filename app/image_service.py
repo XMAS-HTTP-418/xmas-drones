@@ -11,8 +11,6 @@ from config import (
     POINT_LIST,
     TARGETS_POLLINATION_IMAGE,
     TARGETS_SCANNING_IMAGE,
-    WHITE_COLOR,
-    BLACK_COLOR,
     COLOR_DICT_HSV,
 )
 
@@ -49,9 +47,9 @@ class ImageService:
             j = 0
             while j < len(row) - 1:
                 sublist = []
-                while (row[j] != WHITE_COLOR).any() and (row[j] != BLACK_COLOR).any():
-                    if COLOR_DICT_HSV['green']:
-                        self.target_type = TargetType.POLLINATION
+                while (row[j] != COLOR_DICT_HSV['white']).any() and (row[j] != COLOR_DICT_HSV['black']).any():
+                    # if COLOR_DICT_HSV['green'].any():
+                    #     self.target_type = TargetType.POLLINATION
 
                     sublist.append(j)
                     if j < len(row) - 1:
@@ -84,6 +82,6 @@ class ImageService:
         return MIN_COLOR_VALUE - np.sum(color_list)
 
 
-imageservice = ImageService()
-nearest_point = imageservice.get_nearest_target([(20, 2)])
-print(nearest_point)
+# imageservice = ImageService()
+# nearest_point = imageservice.get_nearest_target([(20, 2)])
+# print(nearest_point)
