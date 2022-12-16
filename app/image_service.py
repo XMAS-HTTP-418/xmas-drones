@@ -3,14 +3,17 @@ from typing import NamedTuple
 
 import cv2
 import numpy as np
+from kd_tree import nearest_neighbor_kdtree
 
 from config import (
     MIN_COLOR_VALUE,
     MISSION_AREA_IMAGE,
+    POINT_LIST,
     TARGETS_POLLINATION_IMAGE,
     TARGETS_SCANNING_IMAGE,
     WHITE_COLOR,
     BLACK_COLOR,
+    COLOR_DICT_HSV,
 )
 
 
@@ -34,7 +37,7 @@ class ImageService:
         self.mission_targets = cv2.imread(mission_targets)
         self.target_type: TargetType | None = None
         self.__target_coords = []
-        
+
     @property
     def targets_coords(self) -> list[Point]:
         """
@@ -47,6 +50,9 @@ class ImageService:
             while j < len(row) - 1:
                 sublist = []
                 while (row[j] != WHITE_COLOR).any() and (row[j] != BLACK_COLOR).any():
+                    if COLOR_DICT_HSV['green']:
+                        self.target_type = TargetType.POLLINATION
+
                     sublist.append(j)
                     if j < len(row) - 1:
                         j += 1
@@ -62,10 +68,9 @@ class ImageService:
                     self.__target_coords.append(Point(x=i, y=x_value))
 
         return self.__target_coords
-    
-    
-    def nearest_target(self):
-        self
+
+    def get_nearest_target(self, search_points: POINT_LIST):
+        return nearest_neighbor_kdtree(query_points=search_points, reference_points=self.targets_coords)
 
     def overlay_images(self):
         ...
@@ -79,5 +84,6 @@ class ImageService:
         return MIN_COLOR_VALUE - np.sum(color_list)
 
 
-a = ImageService().targets_coords
-# print(a)
+imageservice = ImageService()
+nearest_point = imageservice.get_nearest_target([(20, 2)])
+print(nearest_point)
