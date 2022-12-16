@@ -1,6 +1,6 @@
 from typing import List, Optional
 import numpy as np
-from mission import Mission
+from task import Task
 from station import Station
 from load import LoadType, Load
 from dataclasses import dataclass
@@ -20,9 +20,8 @@ class Drone:
     max_battery: float
     recharge_rate: float
     is_master: bool
-    load_id: int | None
-    mission_id: int | None
     load: Optional[Load]
+    task: Optional[Task]
     pathfinder: Optional[Dijkstra]
     max_time_fly: float = 0.5
 
@@ -38,10 +37,10 @@ class Drone:
         distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
         return distance * self.power
 
-    def assign_mission(self, mission: Mission):
+    def assign_mission(self, mission: Task):
         self.mission_id = mission.id
 
-    def evaluate_mission_cost(self, mission: Mission) -> np.float64:
+    def evaluate_mission_cost(self, mission: Task) -> np.float64:
         additional_cost = 0.0
         if self.load_id:
             if self.load.type == LoadType[mission.type]:

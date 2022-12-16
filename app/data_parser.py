@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from mission import Mission, MissionType
+from task import Task, TaskType
 from drone import Drone
 from load import Load, LoadType
 from station import Station
@@ -9,7 +9,7 @@ from station import Station
 class DataParser:
     drones: list[Drone]
     loads: list[Load]
-    missions: list[Mission]
+    missions: list[Task]
     stations: list[Station]
 
     @staticmethod
@@ -41,11 +41,11 @@ class DataParser:
         )
 
     @staticmethod
-    def __parse_mission(raw: dict) -> Mission:
+    def __parse_mission(raw: dict) -> Task:
         raw.setdefault(None)
-        return Mission(
+        return Task(
             id=raw['id'],
-            type=MissionType[raw['type']],
+            type=TaskType[raw['type']],
             priority=raw['priority'],
             periodic=raw['periodic'],
             progress=raw['progress'],
