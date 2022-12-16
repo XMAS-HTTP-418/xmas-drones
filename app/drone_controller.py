@@ -1,6 +1,8 @@
 from dijkstra import Dijkstra, getArrayHeightMap
 from drone import Drone
 from task import Task
+from data_parser import DataParser
+from task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE
 import numpy as np
 class DroneController(Drone):
@@ -11,6 +13,9 @@ class DroneController(Drone):
         pass
 
     def socket_check_for_incomming_task(self):
+        pass
+
+    def socket_send_task_assignment(self) -> None:
         pass
 
     def socket_get_task_assignment(self) -> Task:
@@ -51,8 +56,13 @@ class DroneController(Drone):
     def run(self):
         if self.is_master:
             if self.check_for_incomming_mission():
-                self.get_incomming_mission()
-                pass # recalculate mission
+                # recalculate mission
+                data = self.get_incomming_mission()
+                DataParser.load_data(data)
+                cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
+                tasks = calculate_task_assignments(cost_matrix)
+                for task in enumerate(tasks):
+                    self.socket_send_task_assignment()
             if self.socket_receive_status_from_slave():
                 pass
         else:

@@ -57,8 +57,7 @@ class DataParser:
         return Station(id=raw['id'], position=np.array(raw['position']), energy=raw['energy'], load_ids=raw['load_ids'])
 
     @classmethod
-    def load_data(cls, filename: str) -> None:
-        data = json.load(open(filename))
+    def load_data(cls, data:dict) -> None:
         cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
