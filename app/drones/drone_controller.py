@@ -46,12 +46,12 @@ class DroneController(Drone):
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def fly_towards_task(self):
-        task_pos = self.task.get_closest_position(self)
+        task_pos = self.task.get_closest_position(self.position)
         next_move = self.pathfinder.get_route((task_pos[0], task_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def check_task_area(self):
-        delta = self.task.get_closest_position(self) - self.position
+        delta = self.task.get_closest_position(self.position) - self.position
         return np.sqrt(delta[0] ** 2 + delta[1] ** 2) < DISTANCE_ARRIVAL_THRESHOLD
 
     def activate_load(self):
