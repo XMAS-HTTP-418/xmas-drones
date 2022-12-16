@@ -82,6 +82,7 @@ class ImageService:
         return MIN_COLOR_VALUE - np.sum(color_list)
 
 
-# imageservice = ImageService()
-# nearest_point = imageservice.get_nearest_target([(20, 2)])
-# print(nearest_point)
+if __name__ == "__main__":
+    imageservice = ImageService()
+    nearest_point = imageservice.get_nearest_target([(20, 2)])
+    print(nearest_point)

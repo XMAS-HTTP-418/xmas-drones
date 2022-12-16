@@ -46,6 +46,8 @@ class VisualizerService:
 
         plt.show()
 
-visualizer = VisualizerService()
-visualizer.show_area()
-visualizer.show_targets()
+
+if __name__ == "__main__":
+    visualizer = VisualizerService()
+    visualizer.show_area()
+    visualizer.show_targets()
