@@ -5,13 +5,12 @@ import numpy as np
 
 from config import MIN_COLOR_VALUE, MISSION_AREA_IMAGE, MISSION_TARGETS_IMAGE, WHITE_COLOR, BLACK_COLOR
 
-# Черный цвет соответствует минимальной высоте (0 м), белый – максимальной
 class Point(NamedTuple):
     x: int
     y: int
     
     def __repr__(self) -> str:
-        return f'({self.x},{self.y})'
+        return f'({self.x}, {self.y})'
 
 class ImageService:
 
@@ -26,9 +25,26 @@ class ImageService:
         """
         image = cv2.imread(MISSION_TARGETS_IMAGE)
         for i, row in enumerate(image):
-            for j, color_list in enumerate(row):
-                if (color_list != WHITE_COLOR).any() and (color_list != BLACK_COLOR).any():
-                    self.targets_coords.append(Point(x=i, y=j))
+            target_shell = []
+            j = 0
+            while j < len(row) - 1:
+                sublist = []
+                while (row[j] != WHITE_COLOR).any() and (row[j] != BLACK_COLOR).any():
+                    sublist.append(j)
+                    if j < len(row) - 1:
+                        j += 1
+                    else:
+                        sublist.append(j)
+                        break
+                if sublist:
+                    target_shell.append(sublist)
+                j += 1
+                    
+        
+            for sublist in target_shell:
+                for x_value in (max(sublist), min(sublist)):
+                    self.targets_coords.append(Point(x=i, y=x_value))
+                
 
         return self.targets_coords
     
