@@ -38,10 +38,10 @@ class Drone:
         distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
         return distance * self.power
 
-    def evaluate_mission_cost(self, mission: Task) -> np.float64:
+    def evaluate_mission_cost(self, task: Task) -> np.float64:
         additional_cost = 0.0
         if self.load_id:
-            if self.load.type == LoadType[mission.type]:
+            if self.load.type == LoadType[task.type]:
                 additional_cost = 0.0
             else:  # return to station to store and pickup
                 additional_cost += self.calculate_energy_for_flying(
@@ -51,7 +51,7 @@ class Drone:
             additional_cost = self.calculate_energy_for_flying(
                 self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
             )
-        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, mission.get_closest_position())
+        flying_to_mission_cost = self.calculate_energy_for_flying(self.position, task.get_closest_position(self))
         return additional_cost + flying_to_mission_cost
 
 
