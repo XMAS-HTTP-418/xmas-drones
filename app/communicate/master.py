@@ -52,6 +52,7 @@ class Server(Thread):
     def on_client_disconnected(self, client: SlaveHandler):
         try:
             self.slaves.pop(client.index)
+            #TODO перерасчет группы так как кто-то отвалился
         except KeyError as e:
             Logger.log(f"Error {e} slaves={self.slaves}")
         Logger.log(f"Slave #{client.index} {client.address} has disconnected")
@@ -64,6 +65,7 @@ class Server(Thread):
             client.pended_to_disconnect = True
             client.disconnect()
         Logger.command("Server has stopped")
+
 
 
 class Master(DroneController, Server):

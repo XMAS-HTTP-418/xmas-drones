@@ -1,8 +1,9 @@
 from datetime import datetime
 from socket import socket
-from threading import Thread
+from threading import Thread, Event 
 
-from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT
+
+from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT, TIME_DRONE, TIME_HELLO
 from communicate.models import SlaveInfo, Response
 from logger import Logger
 from communicate.controller_message import MessageController
@@ -17,34 +18,56 @@ class SlaveHandler(Thread):
         self.requestHandler = MessageController(client_index)
         self.on_client_disconnected = lambda *_: None
         self.pended_to_disconnect = False
+        self.thread_hello = Event()
 
     def disconnect(self):
         self.connection.close()
 
     def run(self):
-        request_parts = []
-        while received_data := self.get_data_package():
-            request_parts.append(received_data.decode(DATA_PACKAGE_ENCODING))
-            if received_data.endswith(DATA_CLOSING_SEQUENCE):
-                request_data = ''.join(request_parts)[: -len(DATA_CLOSING_SEQUENCE)]
-                for single_request_data in request_data.split(DATA_CLOSING_SEQUENCE.decode(DATA_PACKAGE_ENCODING)):
-                    self.handle_request(single_request_data)
-                request_parts = []
-        if not self.pended_to_disconnect:
+        try:
+            request_parts = []
+            while received_data := self.get_data_package():
+                request_parts.append(received_data.decode(DATA_PACKAGE_ENCODING))
+                if received_data.endswith(DATA_CLOSING_SEQUENCE):
+                    request_data = ''.join(request_parts)[: -len(DATA_CLOSING_SEQUENCE)]
+                    for single_request_data in request_data.split(DATA_CLOSING_SEQUENCE.decode(DATA_PACKAGE_ENCODING)):
+                        self.handle_request(single_request_data)
+                    request_parts = []
+            if not self.pended_to_disconnect:
+                self.on_client_disconnected(self)
+        except TimeoutError:
             self.on_client_disconnected(self)
 
-    def get_data_package(self):
+
+    def get_data_package(self) -> bytes:
         try:
+            self.connection.settimeout(TIME_DRONE) 
             recvData = self.connection.recv(DATA_PACKAGE_SIZE)
             return recvData
         except ConnectionError:
             return 0
+        except TimeoutError:
+            return self.time_to_hello()
+
 
     def handle_request(self, requestData):
         response = self.requestHandler.handle(requestData)
         self.respond(response.toJson())
 
-    def respond(self, data: str):
+
+    def time_to_hello(self) -> bytes:
+        try:
+            request = Response(True,self.index,"hello")
+            self.respond(request.toJson())
+            self.connection.settimeout(TIME_HELLO) # выкидывает ошибку
+            recvData = self.connection.recv(DATA_PACKAGE_SIZE)
+            return recvData
+        except ConnectionError:
+            return 0
+
+
+
+    def respond(self, data: str) -> None:
         data = data.encode(DATA_PACKAGE_ENCODING) + DATA_CLOSING_SEQUENCE
         try:
             self.connection.sendall(data)
