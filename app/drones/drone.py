@@ -1,10 +1,9 @@
 from typing import List, Optional
 import numpy as np
-from task import Task
-from station import Station, StationType
-from load import LoadType, Load
+from app.tasks.task import Task
+from models import Station, StationType, LoadType, Load
 from dataclasses import dataclass
-from dijkstra import Dijkstra, get_array_height_map
+from app.search.dijkstra import Dijkstra, get_array_height_map
 from utils import get_closest_station_to_drone
 
 

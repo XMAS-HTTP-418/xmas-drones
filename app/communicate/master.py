@@ -1,7 +1,7 @@
 # server
 import socket as Socket
 import time
-from drone_controller import DroneController
+from drones.drone_controller import DroneController
 from config import SOCKET_HOST, SOCKET_PORT
 from threading import Thread
 from logger import Logger
@@ -67,11 +67,7 @@ class Server(Thread):
             client.disconnect()
         Logger.command("Server has stopped")
 
-
 class Master(DroneController, Server):
     pass
 
 
-if __name__ == '__main__':
-    server = Server(SOCKET_HOST, SOCKET_PORT)
-    server.start()
