@@ -3,8 +3,9 @@ from socket import socket
 from threading import Thread
 
 from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT
-from communicate.models import SlaveInfo
-
+from communicate.models import SlaveInfo, Response
+from logger import Logger
+from communicate.controller_message import MessageController
 
 class SlaveHandler(Thread):
     def __init__(self, slave_info: SlaveInfo, client_index):
@@ -13,7 +14,7 @@ class SlaveHandler(Thread):
         self.address = slave_info.full_address
         self.index = client_index
         self.connectionTime = datetime.now().strftime(TIME_FORMAT)
-        # self.requestHandler = RequestHandler(changesEvent, clientIndex)
+        self.requestHandler = MessageController(client_index)
         self.on_client_disconnected = lambda *_: None
         self.pended_to_disconnect = False
 

@@ -6,9 +6,10 @@ from data_parser import DataParser
 #from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
-
+from drones.drone import get_closest_station_to_drone
 
 class DroneController(Drone):
+
     def socket_get_incomming_mission(self):
         pass
 
@@ -35,6 +36,7 @@ class DroneController(Drone):
 
     def vote_for_master(self):
         pass
+
 
     def pathfinder_regen(self):
         heightmap = get_array_height_map(MISSION_AREA_IMAGE)

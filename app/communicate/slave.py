@@ -5,7 +5,7 @@ from json import JSONDecodeError
 from threading import Thread
 from config import DATA_CLOSING_SEQUENCE, DATA_PACKAGE_ENCODING, DATA_PACKAGE_SIZE
 from communicate.models import Request, Response
-
+from logger import Logger
 
 class SlaveMaster(Thread):
     def __init__(self, address, port):
@@ -58,6 +58,7 @@ class SlaveMaster(Thread):
     def handle_response(self, response_data: str):
         try:
             response = Response.from_json(response_data)
+            Logger.log(response.body)
         except JSONDecodeError:
             message = f"Invalid data received: {response_data}"
             if response_data.startswith("-m"):
