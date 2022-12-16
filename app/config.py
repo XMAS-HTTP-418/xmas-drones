@@ -19,6 +19,7 @@ COLOR_DICT_HSV = {
 
 # distance
 DISTANCE_ARRIVAL_THRESHOLD = 3
+DRONE_BATTERY_THRESHOLD = 10.0
 
 # sockets
 SOCKET_HOST = "127.0.0.1"  # The server's hostname or IP address

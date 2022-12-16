@@ -3,7 +3,7 @@ import numpy as np
 from task import Task, TaskType
 from drone import Drone
 from load import Load, LoadType
-from station import Station
+from station import Station, StationType
 
 
 class DataParser:
@@ -54,23 +54,13 @@ class DataParser:
     @staticmethod
     def __parse_station(raw: dict) -> Station:
         raw.setdefault(None)
-        return Station(id=raw['id'], position=np.array(raw['position']), energy=raw['energy'], load_ids=raw['load_ids'])
+        return Station(id=raw['id'], position=np.array(raw['position']), type=StationType.RECHARGE)
 
     @classmethod
-    def load_data(cls, filename: str) -> None:
-        data = json.load(open(filename))
+    def load_data(cls, data:dict) -> None:
         cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
         cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
 
-    @classmethod
-    def get_closest_station_by_load_type(cls, drone: Drone, load_type: LoadType):
-        return min(
-            list(filter(lambda x: load_type in [load.type for load in cls.loads if load.id in x.load_ids])),
-            key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)),
-        )
 
-    @classmethod
-    def get_closest_station_to_drone(cls, drone: Drone):
-        return min(cls.stations, key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)))
