@@ -33,11 +33,11 @@ class VisualizerService:
         fig = plt.figure(figsize=(120, 120))
         ax = fig.add_subplot()
 
-        targets = self.imageservice.get_targets_coords()        
+        targets = self.imageservice.get_targets_coords()
 
         x_values = []
         y_values = []
-        
+
         for target_point in targets:
             x_values.append(target_point.x)
             y_values.append(target_point.y)

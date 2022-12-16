@@ -6,6 +6,7 @@ from drone import Drone
 from load import Load, LoadType
 from station import Station
 
+
 class DataParser:
     drones: list[Drone]
     loads: list[Load]
@@ -25,7 +26,7 @@ class DataParser:
             max_battery=raw['max_battery'],
             is_master=raw['is_master'],
             load_id=raw['load_id'],
-            task_id=raw['task_id']
+            task_id=raw['task_id'],
         )
 
     @staticmethod
@@ -37,7 +38,7 @@ class DataParser:
             power=raw['power'],
             mass=raw['mass'],
             used=raw['used'],
-            rate=raw['rate']
+            rate=raw['rate'],
         )
 
     @staticmethod
@@ -48,18 +49,13 @@ class DataParser:
             type=MissionType[raw['type']],
             priority=raw['priority'],
             periodic=raw['periodic'],
-            progress=raw['progress']
+            progress=raw['progress'],
         )
 
     @staticmethod
     def __parse_station(raw: dict) -> Station:
         raw.setdefault(None)
-        return Station(
-            id=raw['id'],
-            position=np.array(raw['position']),
-            energy=raw['energy'],
-            load_ids=raw['load_ids']
-        )
+        return Station(id=raw['id'], position=np.array(raw['position']), energy=raw['energy'], load_ids=raw['load_ids'])
 
     @classmethod
     def load_data(cls, filename: str) -> None:
@@ -71,8 +67,11 @@ class DataParser:
 
     @classmethod
     def get_closest_station_by_load_type(cls, drone: Drone, load_type: LoadType):
-        return min(list(filter(lambda x: load_type in [load.type for load in cls.loads if load.id in x.load_ids])), key=lambda x: np.inner((drone.position-x.position), (drone.position-x.position)))
+        return min(
+            list(filter(lambda x: load_type in [load.type for load in cls.loads if load.id in x.load_ids])),
+            key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)),
+        )
 
     @classmethod
     def get_closest_station_to_drone(cls, drone: Drone):
-        return min(cls.stations, key=lambda x: np.inner((drone.position-x.position), (drone.position-x.position)))
+        return min(cls.stations, key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)))

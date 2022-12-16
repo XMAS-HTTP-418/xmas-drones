@@ -2,6 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
 
+
 class LoadType(str, Enum):
     SPRAYING_SYSTEM = 'SPRAYING_SYSTEM'
     LIDAR = 'LIDAR'
@@ -9,6 +10,7 @@ class LoadType(str, Enum):
     VIDEO_CAMERA = 'VIDEO_CAMERA'
     CARGO = 'CARGO'
     GEORADAR = 'GEORADAR'
+
 
 @dataclass
 class Load:
