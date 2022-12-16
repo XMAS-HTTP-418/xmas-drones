@@ -1,4 +1,4 @@
-from parser.data_parser import DataParser
+from data_parser import DataParser
 from tasks.task_assignment import calculate_task_assignments, get_cost_matrix, assign_tasks
 
 DataParser.load_data()
