@@ -36,7 +36,11 @@ class ImageService:
         self.__target_coords = []
 
     @staticmethod
-    def read_image(filename: str):
+    def read_image(filename: str) -> np.array:
+        """
+        filename: str - название файла
+        return np.array - трёхмерный массив image[x][y] == color
+        """
         im = Image.open(filename).convert("RGB")
         data = iter(im.getdata())
         rows, cows = im.size
@@ -73,12 +77,10 @@ class ImageService:
 
         return self.__target_coords
 
-    def overlay_images(self):
-        ...
-
     @staticmethod
     def get_color_value(color_list):
         """
+        Получить цвет для визуализации
         Минимальное значение - 255, 255, 255 (0м)
         Максимальное - 0, 0, 0
         """

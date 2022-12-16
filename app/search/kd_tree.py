@@ -6,8 +6,7 @@ from config import POINT_LIST
 
 class BT(NamedTuple):
     """
-    A Binary Tree (BT) with a node value, and left- and
-    right-subtrees.
+    Бинарное дерево со значением узла, левым и правым поддеревом
     """
 
     value: int
@@ -17,8 +16,8 @@ class BT(NamedTuple):
 
 class NNRecord(NamedTuple):
     """
-    Used to keep track of the current best guess during a nearest
-    neighbor search.
+    Используется для отслеживания текущего наилучшего предположения во время ближайшего
+    поиска соседей.
     """
 
     point: int
@@ -31,17 +30,15 @@ def SED(X, Y):
 
 
 def kdtree(points):
-    """Construct a k-d tree from an iterable of points.
-
-    This algorithm is taken from Wikipedia. For more details,
-
-    > https://en.wikipedia.org/wiki/K-d_tree#Construction
-
+    """
+    Создаёт kd дерево из итерируемого набора точек
     """
     k = len(points[0])
 
     def build(*, points: list, depth):
-        """Build a k-d tree from a set of points at a given
+        """
+        Строим kd дерево из набора точек в заданной глубине
+        Build a k-d tree from a set of points at a given
         depth.
         """
         if len(points) == 0:
@@ -66,16 +63,16 @@ def kdtree(points):
 
 
 def find_nearest_neighbor(*, tree: BT, point: NNRecord):
-    """Find the nearest neighbor in a k-d tree for a given
-    point.
+    """
+    Поиск ближайшего соседа в дереве kd для данной точки.
     """
     k = len(point)
 
     best: NNRecord | None = None
 
     def search(*, tree: BT, depth):
-        """Recursively search through the k-d tree to find the
-        nearest neighbor.
+        """
+        Рекурсивный поиск сквозь kd дерево для поиска ближайших соседей
         """
         nonlocal best
 
@@ -102,6 +99,8 @@ def find_nearest_neighbor(*, tree: BT, point: NNRecord):
 
 
 def nearest_neighbor_kdtree(*, query_points: POINT_LIST, reference_points: POINT_LIST):
-    """Use a k-d tree to solve the "Nearest Neighbor Problem"."""
+    """
+    Используя kd дерево, решаем проблему ближайших соседей
+    """
     tree = kdtree(reference_points)
     return {query_p: find_nearest_neighbor(tree=tree, point=query_p) for query_p in query_points}
