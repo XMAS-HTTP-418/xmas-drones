@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 
 from image.image_service import ImageService
 
+from config import TARGETS_SCANNING_IMAGE
+
 
 class VisualizerService:
-    def __init__(self) -> None:
-        self.imageservice = ImageService()
+    def __init__(self, mission_targets: str = TARGETS_SCANNING_IMAGE) -> None:
+        self.imageservice = ImageService(mission_targets)
 
     def show_area(self):
 

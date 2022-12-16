@@ -15,6 +15,19 @@ env/Scripts/Activate.ps1
 pip install -r requirements.txt
 python main.py
 ```
+
+# Альтернативные сценарии
+* Проверить взаимодействие на сокетах
+```bash
+python test_master.py
+python test_slave.py
+```
+
+* Проверить визуализацию
+```bash
+python test_master.py
+python test_slave.py
+```
 # Алгоритм
 
 Поиск ближайшей точки - KD-TREE
