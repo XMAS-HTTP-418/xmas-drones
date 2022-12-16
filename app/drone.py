@@ -33,9 +33,13 @@ class Drone:
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         if not self.pathfinder:
             heightmap = getArrayHeightMap('data/height_map.png')
-            pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
+            self.pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
         distance = self.pathfinder.getDistances((int(end_position[0]), int(end_position[1])))
         return distance*self.power
+
+    def assign_mission(self, mission: Mission):
+        self.mission_id = mission.id
+
 
     def evaluate_mission_cost(self, mission: Mission) -> np.float64:
         additional_cost = 0.0
