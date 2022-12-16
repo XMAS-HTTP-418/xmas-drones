@@ -45,9 +45,3 @@ class VisualizerService:
         ax.scatter(x_values, y_values)
 
         plt.show()
-
-
-if __name__ == "__main__":
-    visualizer = VisualizerService()
-    visualizer.show_area()
-    visualizer.show_targets()
