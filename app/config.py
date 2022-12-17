@@ -2,9 +2,9 @@ import numpy as np
 
 
 # image files
-MISSION_AREA_IMAGE = 'data/mission_area.png'
-TARGETS_SCANNING_IMAGE = 'data/targets_scanning.png'
-TARGETS_POLLINATING_IMAGE = 'data/targets_pollinating.png'
+MISSION_AREA_IMAGE = '../data/mission_area.png'
+TARGETS_SCANNING_IMAGE = '../data/targets_scanning.png'
+TARGETS_POLLINATING_IMAGE = '../data/targets_pollinating.png'
 
 # colors
 MIN_COLOR_VALUE = 255 + 255 + 255
@@ -23,7 +23,7 @@ DRONE_BATTERY_THRESHOLD = 10.0
 
 # sockets
 SOCKET_HOST = "127.0.0.1"  # The server's hostname or IP address
-SOCKET_PORT = 65437  # The port used by the server
+SOCKET_PORT = 65455  # The port used by the server
 
 
 # ALIASES

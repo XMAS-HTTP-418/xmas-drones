@@ -4,6 +4,7 @@ from tasks.task import Task
 from models import Station, StationType, LoadType, Load
 from dataclasses import dataclass
 from search.dijkstra import Dijkstra, get_array_height_map
+from config import MISSION_AREA_IMAGE
 
 
 @dataclass
@@ -35,23 +36,23 @@ class Drone:
 
     def calculate_energy_for_flying(self, start_position: np.array, end_position: np.array) -> float:
         if not self.pathfinder:
-            heightmap = get_array_height_map('data/height_map.png')
+            heightmap = get_array_height_map(MISSION_AREA_IMAGE)
             self.pathfinder = Dijkstra(heightmap, start=(int(start_position[0]), int(start_position[1])))
         distance = self.pathfinder.get_distances((int(end_position[0]), int(end_position[1])))
-        return distance * self.power
+        return distance
 
     def evaluate_mission_cost(self, task: Task) -> np.float64:
         additional_cost = 0.0
-        if self.load_id:
+        if self.load:
             if self.load.type == LoadType[task.type]:
                 additional_cost = 0.0
             else:  # return to station to store and pickup
                 additional_cost += self.calculate_energy_for_flying(
-                    self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
+                    self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD).position
                 )
         else:  # return to station to pickup
             additional_cost = self.calculate_energy_for_flying(
-                self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD)
+                self.position, get_closest_station_to_drone(self, self.stations, StationType.LOAD).position
             )
         flying_to_mission_cost = self.calculate_energy_for_flying(
             self.position, task.get_closest_position(self.position)
@@ -68,5 +69,5 @@ def drone_with_max_fly(list: List[Drone]) -> Drone:
 def get_closest_station_to_drone(drone: Drone, stations: list[Station], station_type: StationType):
     return min(
         filter(lambda x: x.type == station_type, stations),
-        key=lambda x: np.inner((drone.position - x.position), (drone.position - x.position)),
+        key=lambda x: (drone.position[0]-x.position[0])**2+(drone.position[1]-x.position[1])**2,
     )
