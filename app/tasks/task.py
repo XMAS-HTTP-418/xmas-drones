@@ -23,7 +23,7 @@ class Task:
     periodic: float
     progress: Optional[float]
 
-    def get_closest_position(self, position: np.array) -> np.array:
+    def get_closest_position(self,position: np.array) -> np.array:
         imageservice = ImageService()
         nearest_point = nearest_neighbor_kdtree(query_points=[(position[0], position[1])], reference_points=imageservice.target_coords)
         return nearest_point[(position[0], position[1])]

@@ -1,6 +1,6 @@
 from config import SOCKET_HOST, SOCKET_PORT
 from communicate.slave import SlaveMaster, Request
-
+from data_parser import DataParser
 
 from drones.drone_controller import DroneController
 

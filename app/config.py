@@ -2,9 +2,9 @@ import numpy as np
 
 
 # image files
-MISSION_AREA_IMAGE = '../data/mission_area.png'
-TARGETS_SCANNING_IMAGE = '../data/targets_scanning.png'
-TARGETS_POLLINATING_IMAGE = '../data/targets_pollinating.png'
+MISSION_AREA_IMAGE = './data/mission_area.png'
+TARGETS_SCANNING_IMAGE = './data/targets_scanning.png'
+TARGETS_POLLINATING_IMAGE = './data/targets_pollinating.png'
 
 # colors
 MIN_COLOR_VALUE = 255 + 255 + 255

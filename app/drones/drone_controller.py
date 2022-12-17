@@ -11,7 +11,7 @@ from communicate.slave import SlaveMaster, Request
 from communicate.master import Server
 from tasks.task_assignment import get_cost_matrix, calculate_task_assignments
 from logger import Logger
-# from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
+from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
 
@@ -110,22 +110,22 @@ class DroneController(Drone):
         heightmap = get_array_height_map(MISSION_AREA_IMAGE)
         self.pathfinder = Dijkstra(heightmap, start=(int(self.position[0]), int(self.position[1])))
         # отправка в json TODO
-        self.go_to_output_json(self)
+        #self.go_to_output_json()
 
     # создание дрона в json
     def create_drons(self):
-        return {"id": self.id,"route":[self.pathfinder.get_route()]}
+        return {"id": self.id,"route":[self.position]}
 
 
     def go_to_output_json(self):
-        with open('../data/output.json') as f:
-                data = json.loads(f)
+        with open('./data/output.json') as f:
+                data = json.load(f)
         if data["drons"]:
             for drone in data["drons"]:
                 if drone["id"] == self.id:
-                    drone["route"] = drone["route"] + [self.pathfinder.get_route()]
+                    drone["route"] = drone["route"] + [self.position]
         else :
-            data["drons"] = [self.create_drons(self)]
+            data["drons"] = [self.create_drons()]
 
         with open("data/output.json", mode='w+') as f:
             f.write(json.dumps(data))
@@ -139,13 +139,15 @@ class DroneController(Drone):
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def fly_towards_task(self):
-        task_pos = self.task.get_closest_position(self)
+        task_pos = self.task.get_closest_position(self.position)
+        self.pathfinder_regen()
         next_move = self.pathfinder.get_route((task_pos[0], task_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
+        self.go_to_output_json()
 
     def check_task_area(self):
-        delta = self.task.get_closest_position(self) - self.position
-        return np.sqrt(delta[0] ** 2 + delta[1] ** 2) < DISTANCE_ARRIVAL_THRESHOLD
+       # delta = self.task.get_closest_position(self.position) - self.position
+        return False #np.sqrt(delta[0] ** 2 + delta[1] ** 2) < DISTANCE_ARRIVAL_THRESHOLD
 
     def activate_load(self):
         pass

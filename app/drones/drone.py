@@ -20,7 +20,7 @@ class Drone:
     # recharge_rate: float
     is_master: bool
     load: Optional[Load]
-    task: Optional[Task]
+    task: Task | None
     slaves: Optional[list]
     stations: Optional[list[Station]]
     assignments: Optional[list[tuple]]
