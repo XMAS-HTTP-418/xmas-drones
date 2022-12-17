@@ -1,3 +1,5 @@
+import json
+
 from search.dijkstra import Dijkstra, get_array_height_map
 from drones.drone import Drone
 from communicate.models import Request, Response
@@ -74,6 +76,10 @@ class DroneController(Drone):
         return None
 
     def socket_mission_recalculate(self):
+        if not self.mission:
+            with open('data/input.json') as f:
+                data = json.load()
+                self.mission = data
         DataParser.load_data(self.mission)
         cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
         tasks = calculate_task_assignments(cost_matrix)
@@ -113,9 +119,9 @@ class DroneController(Drone):
                 SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler, self.socket_mission_recalculate
             )
             server.start()
-            if self.check_for_incomming_mission():
+            if self.socket_check_for_incomming_mission():
                 # recalculate mission
-                data = self.get_incomming_mission()
+                data = self.socket_get_incomming_mission()
                 self.mission = data
                 DataParser.load_data(data)
                 cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
@@ -131,7 +137,7 @@ class DroneController(Drone):
                 server.requestData(Request("dsa", "dsa", "ti dyrek"), lambda _: print('sent'))
             if not self.socket_check_master():
                 self.vote_for_master()
-            if self.check_for_incomming_task():
+            if self.socket_check_for_incomming_task():
                 task = self.get_task_assignment()
                 self.assign_task(task)
                 self.send_status_to_master()
@@ -139,6 +145,7 @@ class DroneController(Drone):
         if self.battery < DRONE_BATTERY_THRESHOLD:
             self.fly_towards_recharge_station()
         else:
-            self.fly_towards_task()
-            if self.check_task_area():
-                self.activate_load()
+            if self.task:
+                self.fly_towards_task()
+                if self.check_task_area():
+                    self.activate_load()
