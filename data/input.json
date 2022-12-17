@@ -26,9 +26,7 @@
       "battery": 30.0,
       "max_battery": 60.0,
       "recharge_rate": 5,
-      "is_master": false,
-      "load_id": null,
-      "mission_id": null
+      "is_master": false
     },
     {
       "id": 2,
@@ -44,9 +42,7 @@
       "battery": 30.0,
       "max_battery": 60.0,
       "recharge_rate": 5,
-      "is_master": false,
-      "load_id": null,
-      "mission_id": null
+      "is_master": false
     },
     {
       "id": 3,
@@ -62,9 +58,7 @@
       "battery": 30.0,
       "max_battery": 60.0,
       "recharge_rate": 5,
-      "is_master": false,
-      "load_id": null,
-      "mission_id": null
+      "is_master": false
     }
   ],
   "missions": [

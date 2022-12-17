@@ -42,7 +42,7 @@ class Drone:
 
     def evaluate_mission_cost(self, task: Task) -> np.float64:
         additional_cost = 0.0
-        if self.load_id:
+        if self.load:
             if self.load.type == LoadType[task.type]:
                 additional_cost = 0.0
             else:  # return to station to store and pickup

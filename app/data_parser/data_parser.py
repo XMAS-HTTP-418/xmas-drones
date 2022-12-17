@@ -9,15 +9,16 @@ class DataParser:
     loads: list[Load]
     missions: list[Task]
     stations: list[Station]
+    drone_module = Drone
 
     def __init__(self):
         from app.drones.drone import Drone
 
-        self.drone_module = Drone
 
-    def __parse_drone(self, raw: dict):
+    @staticmethod
+    def __parse_drone(raw: dict):
         raw.setdefault(None)
-        return self.drone_module(
+        return Drone(
             id=raw['id'],
             position=np.array(raw['position']),
             velocity=np.array(raw['velocity']),
@@ -26,8 +27,8 @@ class DataParser:
             battery=raw['battery'],
             max_battery=raw['max_battery'],
             is_master=raw['is_master'],
-            load_id=raw['load_id'],
-            task_id=raw['task_id'],
+            # load_id=raw['load_id'],
+            # task_id=raw['task_id'],
         )
 
     @staticmethod
@@ -36,10 +37,10 @@ class DataParser:
         return Load(
             id=raw['id'],
             type=LoadType[raw['type']],
-            power=raw['power'],
+            power=raw['power'] if 'power' in raw else None,
             mass=raw['mass'],
-            used=raw['used'],
-            rate=raw['rate'],
+            used=raw['used'] if 'used' in raw else None,
+            rate=raw['rate'] if 'rate' in raw else None,
         )
 
     @staticmethod
@@ -50,7 +51,7 @@ class DataParser:
             type=TaskType[raw['type']],
             priority=raw['priority'],
             periodic=raw['periodic'],
-            progress=raw['progress'],
+            progress=raw['progress'] if 'progress' in raw else None,
         )
 
     @staticmethod
@@ -60,7 +61,7 @@ class DataParser:
 
     @classmethod
     def load_data(cls, data: dict) -> None:
-        cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
+        # cls.drones = [cls.__parse_drone(raw) for raw in data['drones']]
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
         cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
