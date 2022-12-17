@@ -1,5 +1,6 @@
 import numpy as np
 
+DATA_LOCATION = 'data/'
 
 # image files
 MISSION_AREA_IMAGE = './data/mission_area.png'

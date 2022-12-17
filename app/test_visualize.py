@@ -80,4 +80,8 @@ if __name__ == "__main__":
 
     visualizer = VisualizerService(TARGETS_SCANNING_IMAGE)  # put your filename here
     # visualizer.show_area()
-    visualizer.show_targets()
+    # visualizer.show_targets()
+    visualizer.show_output()
+
+
+
