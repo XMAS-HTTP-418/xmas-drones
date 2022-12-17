@@ -1,6 +1,7 @@
 # server
 from typing import Callable
 import socket as Socket
+
 # from drones import DroneController
 from threading import Thread
 from logger import Logger
@@ -9,7 +10,13 @@ from communicate.slave_handler import SlaveHandler
 
 
 class Server(Thread):
-    def __init__(self, address, port, message_callback: Callable = lambda _: _, mission_recalculate_callback: Callable = lambda _: _):
+    def __init__(
+        self,
+        address,
+        port,
+        message_callback: Callable = lambda _: _,
+        mission_recalculate_callback: Callable = lambda _: _,
+    ):
         super().__init__()
         self.socket = Socket.socket()
         self.socket.bind((address, port))
@@ -68,6 +75,7 @@ class Server(Thread):
             client.pended_to_disconnect = True
             client.disconnect()
         Logger.command("Server has stopped")
+
 
 #
 # class Master(DroneController, Server):

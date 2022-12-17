@@ -6,14 +6,15 @@ from communicate.models import Request, Response
 from logger import Logger
 from communicate.controller_message import MessageController
 
+
 class SlaveMaster(Thread):
-    def __init__(self, address, port,message_callback):
+    def __init__(self, address, port, message_callback):
         super().__init__()
         self.address = address
         self.port = port
         self.socket = Socket.socket()
         self.response_queue = []
-        self.requestHandler = MessageController(None,'Master', message_callback)
+        self.requestHandler = MessageController(None, 'Master', message_callback)
         self.on_error = lambda *_: None
         self.on_server_disconnected = lambda *_: None
         self.on_changes_received = lambda *_: None
@@ -42,6 +43,7 @@ class SlaveMaster(Thread):
                 response_parts = []
         self.on_server_disconnected()
 
+    # возможна потеря данных когда нас пингуя а мы отправили инфу
     def get_data_package(self):
         try:
             return self.socket.recv(DATA_PACKAGE_SIZE)
@@ -54,14 +56,12 @@ class SlaveMaster(Thread):
         self.response_queue.append(response_callback)
         self.socket.sendall(request_data)
 
-
     def respond(self, data: str) -> None:
         data = data.encode(DATA_PACKAGE_ENCODING) + DATA_CLOSING_SEQUENCE
         try:
             self.socket.sendall(data)
         except ConnectionError:
             self.on_server_disconnected()
-
 
     def handle_response(self, response_data: str):
         try:
@@ -92,6 +92,3 @@ class Slave(Thread):
 
     def init(self):
         try_connect_to_server = self.slave_worker.connect_to_server()
-
-
-

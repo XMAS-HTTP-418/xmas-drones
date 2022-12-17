@@ -95,7 +95,6 @@ class ImageService:
                         self.target_shell_list[find_key] = {**item | {i: sublist}}
                     else:
                         self.target_shell_list[find_key] = {i: sublist}
-                        
 
                 for x_value in (max(sublist), min(sublist)):
                     target_coords.append(Point(x=i, y=x_value))
