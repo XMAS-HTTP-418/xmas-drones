@@ -57,7 +57,7 @@ class DataParser:
     @staticmethod
     def __parse_station(raw: dict) -> Station:
         raw.setdefault(None)
-        return Station(id=raw['id'], position=np.array(raw['position']), type=StationType.RECHARGE)
+        return Station(id=raw['id'], position=np.array(raw['position']), type=StationType[raw['type']])
 
     @classmethod
     def load_data(cls, data: dict) -> None:
