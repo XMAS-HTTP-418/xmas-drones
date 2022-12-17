@@ -50,7 +50,7 @@ class SlaveMaster(Thread):
     # возможна потеря данных когда нас пингуя а мы отправили инфу
     def get_data_package(self):
         try:
-            self.socket.timeout(TIME_MASTER)
+            self.socket.settimeout(TIME_MASTER)
             return self.socket.recv(DATA_PACKAGE_SIZE)
         except ConnectionError:
             return 0
