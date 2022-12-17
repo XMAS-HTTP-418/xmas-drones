@@ -15,6 +15,7 @@ class Request:
         self.controller = controller
         self.action = action
         self.body = body
+        self.type = "request"
 
     @staticmethod
     def from_Json(request_json):
@@ -40,8 +41,9 @@ class Response:
         self.controller = controller
         self.action = action
         self.body = body
+        self.type = "response"
 
-    def toJson(self):
+    def to_json(self):
         responseDict = {
             "succesed": self.succeed,
             "controller": self.controller,
@@ -56,8 +58,6 @@ class Response:
         jsonResponse = JSONDecoder().decode(responseJson)
         succesed = jsonResponse["succesed"]
         controller = jsonResponse["controller"]
-        action= jsonResponse["action"]
+        action = jsonResponse["action"]
         body = jsonResponse["body"]
         return Response(succesed, action, body, controller)
-
-

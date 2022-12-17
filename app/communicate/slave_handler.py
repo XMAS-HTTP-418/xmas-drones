@@ -3,22 +3,21 @@ from socket import socket
 from threading import Thread
 from config import DATA_PACKAGE_ENCODING, DATA_CLOSING_SEQUENCE, DATA_PACKAGE_SIZE, TIME_FORMAT, TIME_DRONE, TIME_PING
 from typing import Callable
-from communicate.models import SlaveInfo, Response
+from communicate.models import SlaveInfo, Response, Request
 from logger import Logger
 from communicate.controller_message import MessageController
 
 
 class SlaveHandler(Thread):
-    def __init__(self, slave_info: SlaveInfo, client_index, message_callback: Callable = lambda _:_):
+    def __init__(self, slave_info: SlaveInfo, client_index, message_callback: Callable = lambda _: _):
         super().__init__()
         self.connection: socket = slave_info.connection
         self.address = slave_info.full_address
         self.index = client_index
         self.connectionTime = datetime.now().strftime(TIME_FORMAT)
-        self.requestHandler = MessageController(client_index, message_callback)
+        self.requestHandler = MessageController(client_index, 'Slave', message_callback)
         self.on_client_disconnected = lambda *_: None
         self.pended_to_disconnect = False
-
 
     def disconnect(self):
         self.connection.close()
@@ -38,10 +37,9 @@ class SlaveHandler(Thread):
         except TimeoutError:
             self.on_client_disconnected(self)
 
-
     def get_data_package(self) -> bytes:
         try:
-            self.connection.settimeout(TIME_DRONE) 
+            self.connection.settimeout(TIME_DRONE)
             recvData = self.connection.recv(DATA_PACKAGE_SIZE)
             return recvData
         except ConnectionError:
@@ -49,24 +47,22 @@ class SlaveHandler(Thread):
         except TimeoutError:
             return self.time_to_ping()
 
-
     def handle_request(self, requestData):
         response = self.requestHandler.handle(requestData)
-        print(response)
-        self.respond(response.toJson())
-
+        if response:
+            self.respond(response.to_json())
 
     def time_to_ping(self) -> bytes:
         try:
-            request = Response(True,self.index,"hello")
-            self.respond(request.toJson())
-            self.connection.settimeout(TIME_PING) # выкидывает ошибку
+            request = Request(self.index, "ping_slave")
+            request_data = request.to_json().encode(DATA_PACKAGE_ENCODING)
+            request_data += DATA_CLOSING_SEQUENCE
+            self.connection.sendall(request_data)
+            self.connection.settimeout(TIME_PING)
             recvData = self.connection.recv(DATA_PACKAGE_SIZE)
             return recvData
         except ConnectionError:
             return 0
-
-
 
     def respond(self, data: str) -> None:
         data = data.encode(DATA_PACKAGE_ENCODING) + DATA_CLOSING_SEQUENCE

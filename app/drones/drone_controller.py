@@ -7,13 +7,13 @@ from data_parser import DataParser
 from config import SOCKET_HOST, SOCKET_PORT
 from communicate.slave import SlaveMaster, Request
 from communicate.master import Server
-#from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
+
+# from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
 
 
 class DroneController(Drone):
-
     def socket_get_incomming_mission(self):
         pass
 
@@ -24,22 +24,11 @@ class DroneController(Drone):
         pass
 
     def socket_ask_for_task_assignment(self, server: SlaveMaster) -> None:
-        request = Request(
-            controller=self.id,
-            action="ask task",
-            body={}
-        )
-        server.requestData(request, lambda data: (setattr(self,'task',Task(**data))))
+        request = Request(controller=self.id, action="ask task", body={})
+        server.requestData(request, lambda data: (setattr(self, 'task', Task(**data))))
 
     def socket_send_task_assignment(self, server: SlaveMaster, drone_id: int, task: Task) -> None:
-        request = Request(
-            controller=self.id,
-            action='task assignment',
-            body={
-                'task_id': task.id,
-                'drone_id': drone_id
-            }
-        )
+        request = Request(controller=self.id, action='task assignment', body={'task_id': task.id, 'drone_id': drone_id})
         server.requestData(request, lambda _: print('sent'))
 
     def socket_get_task_assignment(self) -> Task:
@@ -52,15 +41,11 @@ class DroneController(Drone):
         request = Request(
             controller=self.id,
             action='status',
-            body={
-                'id': self.id,
-                'battery': self.battery,
-                'position': [self.position[0], self.position[1]]
-            }
+            body={'id': self.id, 'battery': self.battery, 'position': [self.position[0], self.position[1]]},
         )
 
-    def socket_master_message_handler(self, request_data: dict):
-        if request_data['action'] == 'status':
+    def socket_master_message_handler(self, request_data: Request.from_Json) -> Response | None:
+        if request_data.action == 'status':
             drone = request_data['body']
             if list(filter(lambda x: x.id == drone['id'], self.slaves)):
                 for slave in self.slaves:
@@ -68,16 +53,25 @@ class DroneController(Drone):
                         slave.position = drone['position']
                         slave.battery = drone['battery']
             else:
-                self.slaves.append(Drone(
-                    id=drone['id'],
-                    position = np.array(drone['position']),
-                    battery=np.array['battery'],
-                    is_master=False
-                ))
-            return Response(True,self.id, "Done", False)
-        if request_data['action'] == 'ask task':
+                self.slaves.append(
+                    Drone(
+                        id=drone['id'],
+                        position=np.array(drone['position']),
+                        battery=np.array['battery'],
+                        is_master=False,
+                    )
+                )
+            return Response(True, self.id, "Done", False)
+        if request_data.action == 'ask task':
             task = filter(lambda x: x.id == self.assignments[request_data['controller']][1], self.tasks)[0]
-            return Response(True,self.id,task, False)
+            return Response(True, self.id, task, False)
+        if request_data.action == 'ping_slave':
+            return Response(True, self.id, 'ping_response', False)
+        if request_data.action == 'connect':
+            return Response(True, self.id, 'accept')
+        if request_data.action == 'ping_master':
+            return None
+        return None
 
     def socket_mission_recalculate(self):
         DataParser.load_data(self.mission)
@@ -108,14 +102,16 @@ class DroneController(Drone):
 
     def check_task_area(self):
         delta = self.task.get_closest_position(self) - self.position
-        return np.sqrt(delta[0]**2+delta[1]**2) < DISTANCE_ARRIVAL_THRESHOLD
+        return np.sqrt(delta[0] ** 2 + delta[1] ** 2) < DISTANCE_ARRIVAL_THRESHOLD
 
     def activate_load(self):
         pass
 
     def run(self):
         if self.is_master:
-            server = Server(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler, self.socket_mission_recalculate)
+            server = Server(
+                SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler, self.socket_mission_recalculate
+            )
             server.start()
             if self.check_for_incomming_mission():
                 # recalculate mission
@@ -129,7 +125,7 @@ class DroneController(Drone):
             if self.socket_receive_status_from_slave():
                 pass
         else:
-            server = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
+            server = SlaveMaster(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler)
             if server.connect_to_server():
                 server.start()
                 server.requestData(Request("dsa", "dsa", "ti dyrek"), lambda _: print('sent'))
