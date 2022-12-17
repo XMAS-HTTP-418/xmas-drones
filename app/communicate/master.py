@@ -9,7 +9,7 @@ from communicate.slave_handler import SlaveHandler
 
 
 class Server(Thread):
-    def __init__(self, address, port, message_callback: Callable = lambda _: _):
+    def __init__(self, address, port, message_callback: Callable = lambda _: _, mission_recalculate_callback: Callable = lambda _: _):
         super().__init__()
         self.socket = Socket.socket()
         self.socket.bind((address, port))
@@ -17,6 +17,7 @@ class Server(Thread):
         self.slaves = {}
         self.client_index = 0
         self.message_callback = message_callback
+        self.mission_recalculate_callback = mission_recalculate_callback
 
     @property
     def isWorking(self):
@@ -54,7 +55,7 @@ class Server(Thread):
     def on_client_disconnected(self, client: SlaveHandler):
         try:
             self.slaves.pop(client.index)
-            #TODO перерасчет группы так как кто-то отвалился
+            self.mission_recalculate_callback()
         except KeyError as e:
             Logger.log(f"Error {e} slaves={self.slaves}")
         Logger.log(f"Slave #{client.index} {client.address} has disconnected")
