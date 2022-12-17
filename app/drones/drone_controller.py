@@ -110,6 +110,29 @@ class DroneController(Drone):
     def pathfinder_regen(self):
         heightmap = get_array_height_map(MISSION_AREA_IMAGE)
         self.pathfinder = Dijkstra(heightmap, start=(int(self.position[0]), int(self.position[1])))
+        # отправка в json TODO
+        self.go_to_output_json(self)
+
+    # создание дрона в json
+    def create_drons(self):
+        return {"id": self.id,"route":[self.pathfinder.get_route()]}
+
+
+    def go_to_output_json(self):
+        with open('../data/output.json') as f:
+                data = json.loads(f)
+        if data["drons"]:
+            for drone in data["drons"]:
+                if drone["id"] == self.id:
+                    drone["route"] = drone["route"] + [self.pathfinder.get_route()]
+        else :
+            data["drons"] = [self.create_drons(self)]
+
+        with open("data/output.json", mode='w+') as f:
+            f.write(json.dumps(data))
+        
+
+
 
     def fly_towards_recharge_station(self):
         target_pos = self.get_closest_station_to_drone(self, self.stations, StationType.RECHARGE)
