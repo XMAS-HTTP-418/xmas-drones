@@ -87,7 +87,6 @@ class DroneController(Drone):
                 data = json.load(f)
                 self.mission = data
         DataParser.load_data(self.mission)
-        print(self.mission)
         cost_matrix = get_cost_matrix(self.slaves, DataParser.missions)
         tasks = calculate_task_assignments(cost_matrix)
         self.assignments = tasks
@@ -105,12 +104,12 @@ class DroneController(Drone):
 
     def fly_towards_recharge_station(self):
         target_pos = self.get_closest_station_to_drone(self, self.stations, StationType.RECHARGE)
-        next_move = self.pathfinder.getRoute((target_pos[0], target_pos[1]))[1]
+        next_move = self.pathfinder.get_route((target_pos[0], target_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def fly_towards_task(self):
         task_pos = self.task.get_closest_position(self)
-        next_move = self.pathfinder.getRoute((task_pos[0], task_pos[1]))[1]
+        next_move = self.pathfinder.get_route((task_pos[0], task_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def check_task_area(self):

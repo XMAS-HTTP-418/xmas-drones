@@ -1,8 +1,8 @@
 from typing import List, Tuple
 import numpy as np
 from lapsolver import solve_dense
-from app.drones.drone import Drone
-from app.tasks.task import Task
+from drones.drone import Drone
+from tasks import Task
 
 # based on shortest path augmentation
 def calculate_task_assignments(cost_matrix: np.array) -> List[Tuple[int, int]]:
