@@ -28,7 +28,7 @@ DRONE_BATTERY_THRESHOLD = 10.0
 
 # sockets
 SOCKET_HOST = "127.0.0.1"  # The server's hostname or IP address
-SOCKET_PORT = 65454  # The port used by the server
+SOCKET_PORT = 65455  # The port used by the server
 
 
 # ALIASES
