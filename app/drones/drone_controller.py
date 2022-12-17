@@ -11,7 +11,6 @@ from communicate.slave import SlaveMaster, Request
 from communicate.master import Server
 from tasks.task_assignment import get_cost_matrix, calculate_task_assignments
 from logger import Logger
-
 # from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from config import DISTANCE_ARRIVAL_THRESHOLD, MISSION_AREA_IMAGE, DRONE_BATTERY_THRESHOLD
 import numpy as np
