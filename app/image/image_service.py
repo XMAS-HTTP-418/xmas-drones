@@ -2,14 +2,12 @@ from PIL import Image
 from enum import Enum
 from typing import NamedTuple
 
-# import cv2
 import numpy as np
 
 from config import (
     MIN_COLOR_VALUE,
     MISSION_AREA_IMAGE,
     TARGETS_POLLINATING_IMAGE,
-    TARGETS_SCANNING_IMAGE,
     COLOR_DICT_HSV,
 )
 
