@@ -1,14 +1,13 @@
 from typing import List, Tuple
 import numpy as np
-# from lapsolver import solve_dense
+from lapsolver import solve_dense
 from drones.drone import Drone
 from tasks import Task
 
 # based on shortest path augmentation
 def calculate_task_assignments(cost_matrix: np.array) -> List[Tuple[int, int]]:
-    # rids, cids = solve_dense(cost_matrix)
-    # return list(zip(rids, cids))
-    return [(0, 1), (1, 3), (2, 0)]
+    rids, cids = solve_dense(cost_matrix)
+    return list(zip(rids, cids))
 
 
 def get_cost_matrix(drones: List[Drone], missions: List[Task]) -> np.array:
