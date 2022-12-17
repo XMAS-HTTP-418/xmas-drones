@@ -71,6 +71,7 @@ test_image = [
     [1, 1, 5, 5, 5, 5]
 ]
 get_targets_coords(test_image)
+
 from image import ImageService, VisualizerService
 from config import TARGETS_SCANNING_IMAGE
 

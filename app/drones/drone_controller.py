@@ -1,3 +1,4 @@
+from tasks.task_assignment import calculate_task_assignments, get_cost_matrix
 from search.dijkstra import Dijkstra, get_array_height_map
 from drones.drone import Drone
 from communicate.models import Request, Response
@@ -92,12 +93,12 @@ class DroneController(Drone):
 
     def fly_towards_recharge_station(self):
         target_pos = self.get_closest_station_to_drone(self, self.stations, StationType.RECHARGE)
-        next_move = self.pathfinder.getRoute((target_pos[0], target_pos[1]))[1]
+        next_move = self.pathfinder.get_route((target_pos[0], target_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def fly_towards_task(self):
         task_pos = self.task.get_closest_position(self)
-        next_move = self.pathfinder.getRoute((task_pos[0], task_pos[1]))[1]
+        next_move = self.pathfinder.get_route((task_pos[0], task_pos[1]))[1]
         self.position[0], self.position[1] = next_move[0], next_move[1]
 
     def check_task_area(self):
@@ -113,9 +114,9 @@ class DroneController(Drone):
                 SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler, self.socket_mission_recalculate
             )
             server.start()
-            if self.check_for_incomming_mission():
+            if self.socket_check_for_incomming_mission():
                 # recalculate mission
-                data = self.get_incomming_mission()
+                data = self.socket_get_incomming_mission()
                 self.mission = data
                 DataParser.load_data(data)
                 cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
@@ -131,7 +132,7 @@ class DroneController(Drone):
                 server.requestData(Request("dsa", "dsa", "ti dyrek"), lambda _: print('sent'))
             if not self.socket_check_master():
                 self.vote_for_master()
-            if self.check_for_incomming_task():
+            if self.socket_check_for_incomming_task():
                 task = self.get_task_assignment()
                 self.assign_task(task)
                 self.send_status_to_master()
