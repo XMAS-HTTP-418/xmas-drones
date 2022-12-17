@@ -1,7 +1,7 @@
 import socket as Socket
 from json import JSONDecodeError
 from threading import Thread
-from config import DATA_CLOSING_SEQUENCE, DATA_PACKAGE_ENCODING, DATA_PACKAGE_SIZE
+from config import DATA_CLOSING_SEQUENCE, DATA_PACKAGE_ENCODING, DATA_PACKAGE_SIZE,TIME_MASTER
 from communicate.models import Request, Response
 from logger import Logger
 from communicate.controller_message import MessageController
@@ -34,18 +34,23 @@ class SlaveMaster(Thread):
         self.socket.close()
 
     def listenResponse(self):
-        response_parts = []
-        while received_data := self.get_data_package():
-            response_parts.append(received_data.decode(DATA_PACKAGE_ENCODING))
-            if received_data.endswith(DATA_CLOSING_SEQUENCE):
-                response_data = ''.join(response_parts)[: -len(DATA_CLOSING_SEQUENCE)]
-                self.handle_response(response_data)
-                response_parts = []
-        self.on_server_disconnected()
+        try: 
+            response_parts = []
+            while received_data := self.get_data_package():
+                response_parts.append(received_data.decode(DATA_PACKAGE_ENCODING))
+                if received_data.endswith(DATA_CLOSING_SEQUENCE):
+                    response_data = ''.join(response_parts)[: -len(DATA_CLOSING_SEQUENCE)]
+                    self.handle_response(response_data)
+                    response_parts = []
+            self.on_server_disconnected()
+        except TimeoutError:
+            # Здесь считаем что мастер умер TODO Перестройку
+            self.on_server_disconnected()
 
     # возможна потеря данных когда нас пингуя а мы отправили инфу
     def get_data_package(self):
         try:
+            self.socket.timeout(TIME_MASTER)
             return self.socket.recv(DATA_PACKAGE_SIZE)
         except ConnectionError:
             return 0
