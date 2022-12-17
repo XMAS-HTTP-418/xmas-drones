@@ -2,7 +2,7 @@ import numpy as np
 from tasks.task import Task, TaskType
 from drones.drone import Drone
 from models import Load, LoadType, Station, StationType
-
+import json, random
 
 class DataParser:
     drones: list
@@ -64,3 +64,44 @@ class DataParser:
         cls.loads = [cls.__parse_load(raw) for raw in data['loads']]
         cls.missions = [cls.__parse_mission(raw) for raw in data['missions']]
         cls.stations = [cls.__parse_station(raw) for raw in data['stations']]
+
+    @staticmethod
+    def __gen_drones(cls):
+        drones = []
+        for dron in cls.drones:
+            drones.append({"id": dron.id,
+                            "location":"",
+                            "area": cls.__mock_gen_str(),
+                            "area_location":"",
+                            "time_series": cls.__mock_gen_series()})
+
+
+    @staticmethod
+    def __mock_gen_str():
+        a = []
+        for i in range(random.randint(1,2)):
+            s = random.randint(1,3)
+            b = random.randint(1,3)
+            a.append(f"area-1-{b}")
+        return a
+
+
+    @staticmethod
+    def __mock_gen_series():
+        a = []
+        for i in range(random.randint(1,3)):
+            a.append({"time": {"h": 0,"m":random.randint(1,15),"s": random.randint(1,44)},
+                        "long": random.randint(1,110) ,
+                        "lat": random.randint(1,110),
+                        "alt": random.randint(1,100) })
+        return a
+
+
+    def output_data (cls):
+        output = {}
+        
+        output["drones"] = cls.__gen_drones(cls)
+
+        with open("data/output.json", mode='w+') as f:
+            f.write(json.dumps(output))
+
