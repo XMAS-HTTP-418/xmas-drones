@@ -33,7 +33,7 @@ class ImageService:
         self.mission_targets_image = mission_targets
         self.mission_targets = self.read_image(mission_targets)
         self.target_type: TargetType | None = target_type
-        self.target_shell_list = {}
+        self.target_shell_list = []
         self.target_coords = self.__targets_coords()
 
     @staticmethod
@@ -79,23 +79,19 @@ class ImageService:
                     target_shell.append(sublist)
                 j += 1
 
-            for sublist in target_shell:
+            for sublist_index, sublist in enumerate(target_shell):
                 find_key = None
                 if not self.target_shell_list:
-                    self.target_shell_list[i] = {i: sublist}
+                    self.target_shell_list.append({i: sublist})
 
-                for key, value in self.target_shell_list.items():
-                    if sublist in value.values() and key == i - 1:
+                for item_index, item in enumerate(self.target_shell_list):
+                    (key, value), = item.items()
+                    if (sublist in value or sublist == value) and item_index == sublist_index:
                         find_key = key
                         break
 
                 if find_key is not None:
-                    item = self.target_shell_list.get(find_key)
-                    if item is not None:
-                        self.target_shell_list[find_key] = {**item | {i: sublist}}
-                    else:
-                        self.target_shell_list[find_key] = {i: sublist}
-                        
+                    self.target_shell_list.append({i: sublist})
 
                 for x_value in (max(sublist), min(sublist)):
                     target_coords.append(Point(x=i, y=x_value))

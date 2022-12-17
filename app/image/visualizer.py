@@ -41,8 +41,9 @@ class VisualizerService:
         y_values = np.array([])
 
         for target_point in targets:
-            x_values = np.append(x_values, target_point.x)
-            y_values = np.append(y_values, target_point.y)
+            (key, value), = target_point.items()
+            x_values = np.append(x_values, [key for _ in range(len(value))])
+            y_values = np.append(y_values, value)
 
         ax.scatter(x_values, y_values)
 
