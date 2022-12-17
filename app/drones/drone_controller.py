@@ -59,8 +59,8 @@ class DroneController(Drone):
             }
         )
 
-    def socket_master_message_handler(self, request_data: dict):
-        if request_data['action'] == 'status':
+    def socket_master_message_handler(self, request_data: Request.from_Json) -> Response | None:
+        if request_data.action == 'status':
             drone = request_data['body']
             if list(filter(lambda x: x.id == drone['id'], self.slaves)):
                 for slave in self.slaves:
@@ -75,10 +75,16 @@ class DroneController(Drone):
                     is_master=False
                 ))
             return Response(True,self.id, "Done", False)
-        if request_data['action'] == 'ask task':
+        if request_data.action == 'ask task':
             task = filter(lambda x: x.id == self.assignments[request_data['controller']][1], self.tasks)[0]
             return Response(True,self.id,task, False)
-
+        if request_data.action == 'ping_slave':
+            return Response(True,self.id,'ping_master',False)
+        if request_data.action == 'connect':
+            return Response(True,self.id,'accept') 
+        if request_data.action == 'ping_master':
+            return None
+        return None
 
 
     def socket_check_master(self):
@@ -112,31 +118,31 @@ class DroneController(Drone):
         if self.is_master:
             server = Server(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler)
             server.start()
-            if self.check_for_incomming_mission():
-                # recalculate mission
-                data = self.get_incomming_mission()
-                DataParser.load_data(data)
-                cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
-                tasks = calculate_task_assignments(cost_matrix)
-                self.assignments = tasks
-                self.tasks = DataParser.missions
-            if self.socket_receive_status_from_slave():
-                pass
+            # if self.check_for_incomming_mission():
+            #     # recalculate mission
+            #     data = self.get_incomming_mission()
+            #     DataParser.load_data(data)
+            #     cost_matrix = get_cost_matrix(DataParser.drones, DataParser.missions)
+            #     tasks = calculate_task_assignments(cost_matrix)
+            #     self.assignments = tasks
+            #     self.tasks = DataParser.missions
+            # if self.socket_receive_status_from_slave():
+            #     pass
         else:
-            server = SlaveMaster(SOCKET_HOST, SOCKET_PORT)
+            server = SlaveMaster(SOCKET_HOST, SOCKET_PORT, self.socket_master_message_handler)
             if server.connect_to_server():
                 server.start()
                 server.requestData(Request("dsa", "dsa", "ti dyrek"), lambda _: print('sent'))
-            if not self.socket_check_master():
-                self.vote_for_master()
-            if self.check_for_incomming_task():
-                task = self.get_task_assignment()
-                self.assign_task(task)
-                self.send_status_to_master()
+            # if not self.socket_check_master():
+            #     self.vote_for_master()
+            # if self.check_for_incomming_task():
+            #     task = self.get_task_assignment()
+            #     self.assign_task(task)
+            #     self.send_status_to_master()
 
-        if self.battery < DRONE_BATTERY_THRESHOLD:
-            self.fly_towards_recharge_station()
-        else:
-            self.fly_towards_task()
-            if self.check_task_area():
-                self.activate_load()
+        # if self.battery < DRONE_BATTERY_THRESHOLD:
+        #     self.fly_towards_recharge_station()
+        # else:
+        #     self.fly_towards_task()
+        #     if self.check_task_area():
+        #         self.activate_load()

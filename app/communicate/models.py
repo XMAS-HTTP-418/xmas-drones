@@ -41,7 +41,7 @@ class Response:
         self.action = action
         self.body = body
 
-    def toJson(self):
+    def to_json(self):
         responseDict = {
             "succesed": self.succeed,
             "controller": self.controller,
